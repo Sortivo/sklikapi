@@ -3,7 +3,7 @@ sklikapi
 
 SKlik Java API
 
-This is Java API for Seznam's project SKlik (www.sklik.cz). It allows to simple manipulation with SKlik accounts.
+Java API for Seznam's project SKlik (www.sklik.cz). It allows simple manipulation with SKlik accounts.
 The project is being developed, the current version is 0.5, that means most of the methods are not available, but they are easy to implement.
 
 Example of use:
