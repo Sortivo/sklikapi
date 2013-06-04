@@ -8,7 +8,7 @@ The project is being developed, the current version is 0.5, that means most of t
 
 Example of use:
 
-<code>
+``` java
 Client client = new Client();
 client.login("username", "password");
 
@@ -26,4 +26,4 @@ Campaign campaign = new Camapign(client);
 // Response is a hash map
 Response resp = campaign.listCampaigns();
 
-</code>
+```
