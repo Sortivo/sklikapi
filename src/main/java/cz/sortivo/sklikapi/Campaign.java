@@ -1,37 +1,152 @@
+/*
+ * Author - Jan Dufek, dufeja@gmail.com
+ * Copying and using only with permission of the author.
+ */
 package cz.sortivo.sklikapi;
 
-import cz.sortivo.sklikapi.exception.InvalideRequestException;
-import cz.sortivo.sklikapi.exception.SKlikException;
+import org.joda.time.DateTime;
 
 /**
- * http://api.sklik.cz/listCampaigns.html
+ *
  * @author Jan Dufek
  */
 public class Campaign {
-    
-    private static final String LIST_CAMPAIGNS_METHOD_NAME = "listCampaigns";
-    private static final String CREATE_CAMPAIGN_METHOD_NAME = "campaign.create";
-    private static final String REMOVE_CAMPAIGN_METHOD_NAME = "campaign.remove";
-    
-    private Client client;
-    
-    public Campaign(Client client) {
-        this.client = client;
+    private Integer id;
+    private String name;
+    private boolean removed;
+    private String status;
+    private Integer dayBudget;
+    private Integer exhaustedDayBudget;
+    private String adSelection;
+    private DateTime createDate;
+    private Integer totalBudget;
+    private Integer exhaustedTotalBudget;
+    private Integer totalClicks;
+    private Integer exhaustedTotalClicks;
+    private Integer premiseId;
+    private DateTime startDate;
+    private DateTime endDate;
+
+    public Integer getId() {
+        return id;
     }
-    
-    public Response listCampaigns() throws InvalideRequestException, SKlikException{
-        return client.sendRequest(LIST_CAMPAIGNS_METHOD_NAME, new Object[]{});
+
+    public void setId(Integer id) {
+        this.id = id;
     }
-    
-    public Response listCampaigns(int userId) throws InvalideRequestException, SKlikException{
-        return client.sendRequest(LIST_CAMPAIGNS_METHOD_NAME, new Object[]{userId});
+
+    public String getName() {
+        return name;
     }
-    
-    public Response create(int groupId, Struct campaign) throws InvalideRequestException, SKlikException{
-        return client.sendRequest(CREATE_CAMPAIGN_METHOD_NAME, new Object[]{groupId, campaign});
+
+    public void setName(String name) {
+        this.name = name;
     }
-    
-    public Response remove(int campaignId) throws InvalideRequestException, SKlikException{
-        return client.sendRequest(REMOVE_CAMPAIGN_METHOD_NAME, new Object[]{campaignId});
+
+    public boolean isRemoved() {
+        return removed;
     }
+
+    public void setRemoved(boolean removed) {
+        this.removed = removed;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Integer getDayBudget() {
+        return dayBudget;
+    }
+
+    public void setDayBudget(Integer dayBudget) {
+        this.dayBudget = dayBudget;
+    }
+
+    public Integer getExhaustedDayBudget() {
+        return exhaustedDayBudget;
+    }
+
+    protected void setExhaustedDayBudget(Integer exhaustedDayBudget) {
+        this.exhaustedDayBudget = exhaustedDayBudget;
+    }
+
+    public String getAdSelection() {
+        return adSelection;
+    }
+
+    public void setAdSelection(String adSelection) {
+        this.adSelection = adSelection;
+    }
+
+    public DateTime getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(DateTime createDate) {
+        this.createDate = createDate;
+    }
+
+    public Integer getTotalBudget() {
+        return totalBudget;
+    }
+
+    public void setTotalBudget(Integer totalBudget) {
+        this.totalBudget = totalBudget;
+    }
+
+    public Integer getExhaustedTotalBudget() {
+        return exhaustedTotalBudget;
+    }
+
+    protected void setExhaustedTotalBudget(Integer exhaustedTotalBudget) {
+        this.exhaustedTotalBudget = exhaustedTotalBudget;
+    }
+
+    public Integer getTotalClicks() {
+        return totalClicks;
+    }
+
+    public void setTotalClicks(Integer totalClicks) {
+        this.totalClicks = totalClicks;
+    }
+
+    public Integer getExhaustedTotalClicks() {
+        return exhaustedTotalClicks;
+    }
+
+    protected void setExhaustedTotalClicks(Integer exhaustedTotalClicks) {
+        this.exhaustedTotalClicks = exhaustedTotalClicks;
+    }
+
+    public Integer getPremiseId() {
+        return premiseId;
+    }
+
+    public void setPremiseId(Integer premiseId) {
+        this.premiseId = premiseId;
+    }
+
+   
+
+   
+
+    protected DateTime getStartDate() {
+        return startDate;
+    }
+
+    protected DateTime getEndDate() {
+        return endDate;
+    }
+
+
+    
+
+    
+    
+    
 }

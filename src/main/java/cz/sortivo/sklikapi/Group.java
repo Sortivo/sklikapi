@@ -1,32 +1,85 @@
 package cz.sortivo.sklikapi;
 
-import cz.sortivo.sklikapi.exception.InvalideRequestException;
-import cz.sortivo.sklikapi.exception.SKlikException;
-
+import org.joda.time.DateTime;
 /**
- * http://api.sklik.cz/listGroups.html
+ *
  * @author Jan Dufek
  */
 public class Group {
-    private static final String LIST_GROUPS_METHOD_NAME = "listGroups";
-    private static final String CREATE_GROUP_METHOD_NAME = "group.create";
-    private static final String REMOVE_GROUP_METHOD_NAME = "group.remove";
     
-    private Client client;
-    
-    public Group(Client client) {
-        this.client = client;
+    private Integer id;
+    private String name;
+    private boolean removed;
+    private Integer cpc;
+    private Integer cpcContext;
+    private String status;
+    private Integer campaignId;
+    private DateTime createDate;
+
+    public Integer getId() {
+        return id;
+    }
+
+    protected void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean isRemoved() {
+        return removed;
+    }
+
+    public void setRemoved(boolean removed) {
+        this.removed = removed;
+    }
+
+    public Integer getCpc() {
+        return cpc;
+    }
+
+    public void setCpc(Integer cpc) {
+        this.cpc = cpc;
+    }
+
+    public Integer getCpcContext() {
+        return cpcContext;
+    }
+
+    public void setCpcContext(Integer cpcContext) {
+        this.cpcContext = cpcContext;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Integer getCampaignId() {
+        return campaignId;
+    }
+
+    protected void setCampaignId(Integer campaignId) {
+        this.campaignId = campaignId;
+    }
+
+    public DateTime getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(DateTime createDate) {
+        this.createDate = createDate;
     }
     
-    public Response listGroups(int campaignId) throws InvalideRequestException, SKlikException{
-        return client.sendRequest(LIST_GROUPS_METHOD_NAME, new Object[]{campaignId});
-    }
-        
-    public Response create(int campaignId, Struct group) throws InvalideRequestException, SKlikException{
-        return client.sendRequest(CREATE_GROUP_METHOD_NAME, new Object[]{campaignId, group});
-    }
     
-    public Response remove(int groupId) throws InvalideRequestException, SKlikException{
-        return client.sendRequest(REMOVE_GROUP_METHOD_NAME, new Object[]{groupId});
-    }
+    
 }

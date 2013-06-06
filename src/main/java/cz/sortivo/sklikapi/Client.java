@@ -5,6 +5,8 @@ import cz.sortivo.sklikapi.exception.SKlikException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
@@ -38,9 +40,9 @@ public class Client {
 
             config.setServerURL(new URL(url));
             config.setEnabledForExtensions(true);
-            XmlRpcClient client = new XmlRpcClient();
-            client.setConfig(config);
-            client.setTypeFactory(new XmlRpcTypeNil(client));
+            rpcClient = new XmlRpcClient();
+            rpcClient.setConfig(config);
+            rpcClient.setTypeFactory(new XmlRpcTypeNil(rpcClient));
         } catch (MalformedURLException ex) {
             throw new InvalideRequestException("Malformed URL " + getUrl(), ex);
         }
@@ -51,13 +53,13 @@ public class Client {
         return SKLIK_URL;
     }
     
-    public Response login(String username, String password) throws InvalideRequestException, SKlikException{
-        Response resp = send(LOGIN_METHOD_NAME, new String[]{username, password});
+    public Map<String, Object> login(String username, String password) throws InvalideRequestException, SKlikException{
+        Map<String, Object> resp = send(LOGIN_METHOD_NAME, new String[]{username, password});
         session = (String) resp.get("session");
         return resp;
     }
     
-    public Response sendRequest(String method, Object[] params) throws InvalideRequestException, SKlikException{
+    public Map<String, Object> sendRequest(String method, Object[] params) throws InvalideRequestException, SKlikException{
         if (session == null){
             throw new InvalideRequestException("It is necessary to call login method first! (no session available)");            
         }
@@ -72,9 +74,14 @@ public class Client {
         return send(method, params);
     }
     
-    protected Response send(String method, Object[] params) throws InvalideRequestException, SKlikException{
+    protected Map<String, Object> send(String method, Object[] params) throws InvalideRequestException, SKlikException{
         try{
-            return new Response(rpcClient.execute(method, params));
+            Map<String, Object> response =(HashMap<String, Object>)rpcClient.execute(method, params);
+            int status = (Integer) response.get("status");
+            if (status >= 400){
+                throw new SKlikException("Request error with status code " + status + " and status message " + response.get("statusMessage"), status, response);
+            }
+            return response;
             
         } catch (XmlRpcException ex){
             throw new InvalideRequestException("XML-RPC Exception for " + Arrays.toString(params), ex);
