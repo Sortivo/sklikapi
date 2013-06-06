@@ -26,6 +26,9 @@ public class Campaign {
     private Integer premiseId;
     private DateTime startDate;
     private DateTime endDate;
+    
+    public final static String STATUS_ACTIVE = "active";
+    public final static String STATUS_SUSPEND = "suspend";
 
     public Integer getId() {
         return id;
@@ -143,6 +146,15 @@ public class Campaign {
         return endDate;
     }
 
+    public void setStartDate(DateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(DateTime endDate) {
+        this.endDate = endDate;
+    }
+
+    
 
     
 

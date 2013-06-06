@@ -50,10 +50,17 @@ public class AdDAO {
         return ads;
     }
     
-   
-    public boolean create(int groupId, Ad ad) throws InvalideRequestException, SKlikException{
-        client.sendRequest(CREATE_AD_METHOD_NAME, new Object[]{groupId, transformFromObject(ad)});
-        return true;
+   /**
+    * 
+    * @param groupId
+    * @param ad
+    * @return id of new Ad
+    * @throws InvalideRequestException
+    * @throws SKlikException 
+    */
+    public Integer create(int groupId, Ad ad) throws InvalideRequestException, SKlikException{
+        Map<String, Object> resp = client.sendRequest(CREATE_AD_METHOD_NAME, new Object[]{groupId, transformFromObject(ad)});
+        return (Integer)resp.get("adId");
     }
     
     public boolean remove(int adId) throws InvalideRequestException, SKlikException{

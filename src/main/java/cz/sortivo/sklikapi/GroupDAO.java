@@ -47,10 +47,17 @@ public class GroupDAO {
         return groups;
         
     }
-    
-    public boolean create(int campaignId, Group group) throws InvalideRequestException, SKlikException{
-        client.sendRequest(CREATE_GROUP_METHOD_NAME, new Object[]{campaignId, transformFromObject(group)});
-        return true;
+    /**
+     * 
+     * @param campaignId
+     * @param group
+     * @return Id of new Group
+     * @throws InvalideRequestException
+     * @throws SKlikException 
+     */
+    public Integer create(int campaignId, Group group) throws InvalideRequestException, SKlikException{
+        Map<String, Object> resp = client.sendRequest(CREATE_GROUP_METHOD_NAME, new Object[]{campaignId, transformFromObject(group)});
+        return (Integer)resp.get("groupId");
     }
     
     public boolean remove(int groupId) throws InvalideRequestException, SKlikException{

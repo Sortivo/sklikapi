@@ -51,10 +51,16 @@ public class CampaignDAO {
         }
         return campaigns;
     }
-    
-    public boolean create(int groupId, Campaign campaign) throws InvalideRequestException, SKlikException{
-        client.sendRequest(CREATE_CAMPAIGN_METHOD_NAME, new Object[]{groupId, transformFromObject(campaign)});
-        return true;
+    /**
+     * 
+     * @param campaign
+     * @return ID of new Campaign
+     * @throws InvalideRequestException
+     * @throws SKlikException 
+     */
+    public Integer create(Campaign campaign) throws InvalideRequestException, SKlikException{
+        Map<String, Object> resp = client.sendRequest(CREATE_CAMPAIGN_METHOD_NAME, new Object[]{transformFromObject(campaign)});
+        return (Integer)resp.get("campaignId");
     }
     
     public boolean remove(int campaignId) throws InvalideRequestException, SKlikException{

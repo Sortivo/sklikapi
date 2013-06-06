@@ -46,9 +46,17 @@ public class KeywordDAO {
         return keywords;
     }
         
-    public boolean create(int groupId, Keyword keyword) throws InvalideRequestException, SKlikException{
-        client.sendRequest(CREATE_KEYWORD_METHOD_NAME, new Object[]{groupId, transformFromObject(keyword)});
-        return true;
+    /**
+     * 
+     * @param groupId
+     * @param keyword
+     * @return Id of new Keyword
+     * @throws InvalideRequestException
+     * @throws SKlikException 
+     */
+    public Integer create(int groupId, Keyword keyword) throws InvalideRequestException, SKlikException{
+        Map<String, Object> resp = client.sendRequest(CREATE_KEYWORD_METHOD_NAME, new Object[]{groupId, transformFromObject(keyword)});
+        return (Integer)resp.get("keywordId");
     }
     
     public boolean remove(int keywordId) throws InvalideRequestException, SKlikException{
