@@ -12,18 +12,17 @@ Example of use:
 Client client = new Client();
 client.login("username", "password");
 
-Struct struct = new Struct();
-struct.put("name", "blabla.");
-struct.put("cpc", 20);
+Group group = new Group();
+group.setName("group456");
+group.setCpc(1500);
 
-Group group = new Group(client);
-group.create(4745, struct);
+GroupDAO groupDAO = new GroupDAO(client);
+group.create(4745, group);
 
 group.remove(778);
 
 
-Campaign campaign = new Camapign(client);
-// Response is a hash map
-Response resp = campaign.listCampaigns();
+CampaignDAO campaignDAO = new CamapignDAO(client);
+List<Campaign> campaigns = campaignDAO.listCampaigns();
 
 ```
