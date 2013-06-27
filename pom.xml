@@ -57,5 +57,10 @@
         <version>2.2</version>
     </dependency>
             
+    <dependency>
+      <groupId>org.apache.servicemix.bundles</groupId>
+      <artifactId>org.apache.servicemix.bundles.joda-time</artifactId>
+      <version>1.5.2_5</version>
+    </dependency>
   </dependencies>
 </project>
