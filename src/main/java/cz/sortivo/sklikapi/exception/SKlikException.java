@@ -28,20 +28,22 @@ public class SKlikException extends Exception{
         return response;
     }
     
-    @SuppressWarnings("unchecked")
-    public Map<String, Object> getErrors() {
-        return (Map<String, Object>) response.get("errors");
+    public Object[] getErrors() {
+        return (Object[]) response.get("errors");
     }
-    
+
+    @SuppressWarnings("unchecked")
     public String getErrorsToString() {
         String errorsStr = "";
-        Map<String, Object> errors = getErrors();
+        Object[] errors = getErrors();
         if (errors != null) {
-            for (Entry<String, Object> error : errors.entrySet()) {
-                errorsStr += error.getKey() + ": " + error.getValue() + " - "; 
+            for (Object error : errors) {
+                for (Entry<String, Object> errorEntry : ((Map<String, Object>)error).entrySet()) {
+                    errorsStr += errorEntry.getKey() + ": " + errorEntry.getValue() + " - "; 
+                }
             }
         }
         
-        return errorsStr;
+        return errorsStr.substring(0, errorsStr.length() - 2);
     }
 }
