@@ -1,7 +1,7 @@
 package cz.sortivo.sklikapi.exception;
 
-import cz.sortivo.sklikapi.Response;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * The exception is using if response status is different then 200
@@ -9,6 +9,8 @@ import java.util.Map;
  */
 public class SKlikException extends Exception{
     
+    private static final long serialVersionUID = 1L;
+
     private final int status;
     private final Map<String, Object> response;
  
@@ -26,6 +28,20 @@ public class SKlikException extends Exception{
         return response;
     }
     
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> getErrors() {
+        return (Map<String, Object>) response.get("errors");
+    }
     
-    
+    public String getErrorsToString() {
+        String errorsStr = "";
+        Map<String, Object> errors = getErrors();
+        if (errors != null) {
+            for (Entry<String, Object> error : errors.entrySet()) {
+                errorsStr += error.getKey() + ": " + error.getValue() + " - "; 
+            }
+        }
+        
+        return errorsStr;
+    }
 }
