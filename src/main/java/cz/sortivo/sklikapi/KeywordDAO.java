@@ -65,18 +65,18 @@ public class KeywordDAO {
         return true;
     }
     
-    public boolean setActive(int adId) throws InvalideRequestException, SKlikException{
-        return setAttributes(adId, new Attributes(Status.ACTIVE));
+    public boolean setActive(int keywordId) throws InvalideRequestException, SKlikException{
+        return setAttributes(keywordId, new Attributes(Status.ACTIVE));
     }
     
-    public boolean setSuspend(int adId) throws InvalideRequestException, SKlikException{
-        return setAttributes(adId, new Attributes(Status.SUSPEND));
+    public boolean setSuspend(int keywordId) throws InvalideRequestException, SKlikException{
+        return setAttributes(keywordId, new Attributes(Status.SUSPEND));
     }
     
-    public boolean setAttributes(int adId, Attributes attributes) throws InvalideRequestException, SKlikException{
+    public boolean setAttributes(int keywordId, Attributes attributes) throws InvalideRequestException, SKlikException{
         Map<String, Object> map = new HashMap<>();
         map.put(FIELD_STATUS, attributes.getStatus().getStatusText());
-        client.sendRequest(SET_ATTRIBUTES_METHOD_NAME, new Object[]{adId, map});
+        client.sendRequest(SET_ATTRIBUTES_METHOD_NAME, new Object[]{keywordId, map});
         return true;
     }
     
