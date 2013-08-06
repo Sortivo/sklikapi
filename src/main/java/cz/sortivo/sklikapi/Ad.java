@@ -102,6 +102,9 @@ public class Ad {
     }
 
     public Status getStatus() {
+        if (status == null){
+            return Status.ACTIVE;
+        }
         return status;
     }
 

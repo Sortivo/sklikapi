@@ -57,6 +57,9 @@ public class Group {
     }
 
     public Status getStatus() {
+        if (status == null){
+            return Status.ACTIVE;
+        }
         return status;
     }
 
