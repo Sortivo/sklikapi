@@ -115,6 +115,14 @@ public class KeywordDAO {
         map.put(FIELD_MIN_CPC, keyword.getMinCpc());
         return map;
     }
+    
+    private void setMatchTypeToName(Keyword k){
+        String name = k.getName();
+        switch (k.getMatchType()){
+            case PHRASE: k.setName("\"" + name + "\""); break;
+            case EXACT: k.setName("[" + name + "]"); break;
+        }
+    }
 
     private Keyword transformToObject(Map<String, Object> keywordResp) throws InvalideRequestException {
         try{
@@ -130,7 +138,9 @@ public class KeywordDAO {
             if(keywordResp.get(FIELD_CREATE_DATE) != null)keyword.setCreateDate(new DateTime(keywordResp.get(FIELD_CREATE_DATE)));
             if(keywordResp.get(FIELD_GROUP_ID) != null)keyword.setGroupId((Integer)keywordResp.get(FIELD_GROUP_ID));
             if(keywordResp.get(FIELD_MIN_CPC) != null)keyword.setMinCpc((Integer)keywordResp.get(FIELD_MIN_CPC));
-
+            
+            setMatchTypeToName(keyword);
+            
             return keyword; 
         } catch (NumberFormatException ex){
             throw new InvalideRequestException(ex);
