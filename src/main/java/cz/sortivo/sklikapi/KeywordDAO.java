@@ -83,8 +83,9 @@ public class KeywordDAO {
     private void checkMatchType(Keyword keyword){
         if (keyword.getMatchType() == null){
             String keywordName = keyword.getName().trim();
-            
-            if (keywordName.startsWith("\"") && keywordName.endsWith("\"")){
+
+
+            if (keywordName.startsWith("\"") && keywordName.endsWith("\"") && keywordName.length() >= 2){
                 keyword.setMatchType(MatchType.PHRASE);
                 keyword.setName(keywordName.substring(1, keywordName.length() - 1));
             } else if(keywordName.startsWith("[") && keywordName.endsWith("]")){
@@ -95,6 +96,7 @@ public class KeywordDAO {
                 keyword.setName(keywordName);
             }
         }
+           
     }
     
     private Map<String, Object> transformFromObject(Keyword keyword){
