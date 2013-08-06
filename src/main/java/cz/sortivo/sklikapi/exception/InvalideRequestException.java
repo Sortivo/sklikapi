@@ -6,6 +6,8 @@ package cz.sortivo.sklikapi.exception;
  */
 public class InvalideRequestException extends Exception{
 
+    private static final long serialVersionUID = 1L;
+
     public InvalideRequestException(Throwable cause) {
         super(cause);
     }
