@@ -80,11 +80,29 @@ public class KeywordDAO {
         return true;
     }
     
+    private void checkMatchType(Keyword keyword){
+        if (keyword.getMatchType() == null){
+            String keywordName = keyword.getName().trim();
+            
+            if (keywordName.startsWith("\"") && keywordName.endsWith("\"")){
+                keyword.setMatchType(MatchType.PHRASE);
+                keyword.setName(keywordName.substring(1, keywordName.length() - 1));
+            } else if(keywordName.startsWith("[") && keywordName.endsWith("]")){
+                keyword.setMatchType(MatchType.EXACT);
+                keyword.setName(keywordName.substring(1, keywordName.length() - 1));
+            } else {
+                keyword.setMatchType(MatchType.BROAD);
+                keyword.setName(keywordName);
+            }
+        }
+    }
+    
     private Map<String, Object> transformFromObject(Keyword keyword){
+        checkMatchType(keyword);
         Map<String, Object> map = new HashMap<>();
         map.put(FIELD_ID, keyword.getId());
         map.put(FIELD_NAME, keyword.getName());
-        map.put(FIELD_MATCH_TYPE, keyword.getMatchType());
+        map.put(FIELD_MATCH_TYPE, keyword.getMatchType().getMatchTypeText());
         map.put(FIELD_REMOVED, keyword.isRemoved());
         map.put(FIELD_STATUS, keyword.getStatus());
         map.put(FIELD_DISABLED, keyword.isDisabled());
@@ -101,7 +119,7 @@ public class KeywordDAO {
             Keyword keyword = new Keyword();
             if(keywordResp.get(FIELD_ID) != null) keyword.setId((Integer)keywordResp.get(FIELD_ID));
             if(keywordResp.get(FIELD_NAME) != null)keyword.setName((String)keywordResp.get(FIELD_NAME));
-            if(keywordResp.get(FIELD_MATCH_TYPE) != null)keyword.setMatchType((String)keywordResp.get(FIELD_MATCH_TYPE));
+            if(keywordResp.get(FIELD_MATCH_TYPE) != null)keyword.setMatchType(MatchType.getMatchType((String)keywordResp.get(FIELD_MATCH_TYPE)));
             if(keywordResp.get(FIELD_REMOVED) != null)keyword.setRemoved((boolean)keywordResp.get(FIELD_REMOVED));
             if(keywordResp.get(FIELD_STATUS) != null)keyword.setStatus((String)keywordResp.get(FIELD_STATUS));
             if(keywordResp.get(FIELD_DISABLED) != null)keyword.setDisabled((boolean)keywordResp.get(FIELD_DISABLED));

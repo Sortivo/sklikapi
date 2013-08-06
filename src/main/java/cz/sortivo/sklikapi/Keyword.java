@@ -14,7 +14,7 @@ public class Keyword {
     
     private Integer id;
     private String name;
-    private String matchType;
+    private MatchType matchType;
     private boolean removed;
     private String status;
     private boolean disabled;
@@ -40,11 +40,11 @@ public class Keyword {
         this.name = name;
     }
 
-    public String getMatchType() {
+    public MatchType getMatchType() {
         return matchType;
     }
 
-    public void setMatchType(String matchType) {
+    public void setMatchType(MatchType matchType) {
         this.matchType = matchType;
     }
 
