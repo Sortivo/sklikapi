@@ -106,7 +106,7 @@ public class KeywordDAO {
         map.put(FIELD_NAME, keyword.getName());
         map.put(FIELD_MATCH_TYPE, keyword.getMatchType().getMatchTypeText());
         map.put(FIELD_REMOVED, keyword.isRemoved());
-        map.put(FIELD_STATUS, keyword.getStatus());
+        map.put(FIELD_STATUS, keyword.getStatus().getStatusText());
         map.put(FIELD_DISABLED, keyword.isDisabled());
         map.put(FIELD_CPC, keyword.getCpc());
         map.put(FIELD_CREATE_DATE, keyword.getCreateDate());
@@ -123,7 +123,7 @@ public class KeywordDAO {
             if(keywordResp.get(FIELD_NAME) != null)keyword.setName((String)keywordResp.get(FIELD_NAME));
             if(keywordResp.get(FIELD_MATCH_TYPE) != null)keyword.setMatchType(MatchType.getMatchType((String)keywordResp.get(FIELD_MATCH_TYPE)));
             if(keywordResp.get(FIELD_REMOVED) != null)keyword.setRemoved((boolean)keywordResp.get(FIELD_REMOVED));
-            if(keywordResp.get(FIELD_STATUS) != null)keyword.setStatus((String)keywordResp.get(FIELD_STATUS));
+            if(keywordResp.get(FIELD_STATUS) != null)keyword.setStatus(Status.getStatus((String)keywordResp.get(FIELD_STATUS)));
             if(keywordResp.get(FIELD_DISABLED) != null)keyword.setDisabled((boolean)keywordResp.get(FIELD_DISABLED));
             if(keywordResp.get(FIELD_CPC) != null)keyword.setCpc((Integer)keywordResp.get(FIELD_CPC));
             if(keywordResp.get(FIELD_URL) != null)keyword.setUrl((String)keywordResp.get(FIELD_URL));

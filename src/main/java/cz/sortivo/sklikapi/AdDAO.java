@@ -93,7 +93,7 @@ public class AdDAO {
         map.put(FIELD_CLICKTHRU_TEXT, ad.getClickthruText());
         map.put(FIELD_CLICKTHRU_URL, ad.getClickthruUrl());
         map.put(FIELD_REMOVED, ad.isRemoved());
-        map.put(FIELD_STATUS, ad.getStatus());
+        map.put(FIELD_STATUS, ad.getStatus().getStatusText());
         map.put(FIELD_CREATE_DATE, ad.getCreateDate());
         map.put(FIELD_GROUP_ID, ad.getGroupId());
         map.put(FIELD_PREMISE_MODE, ad.getPremiseMode());
@@ -112,7 +112,7 @@ public class AdDAO {
             if(adResp.get(FIELD_CLICKTHRU_TEXT) != null)ad.setClickthruText((String)adResp.get(FIELD_CLICKTHRU_TEXT));
             if(adResp.get(FIELD_CLICKTHRU_URL) != null)ad.setClickthruUrl((String)adResp.get(FIELD_CLICKTHRU_URL));
             if(adResp.get(FIELD_REMOVED) != null)ad.setRemoved((boolean)adResp.get(FIELD_REMOVED));
-            if(adResp.get(FIELD_STATUS) != null)ad.setStatus((String)adResp.get(FIELD_STATUS));
+            if(adResp.get(FIELD_STATUS) != null)ad.setStatus(Status.getStatus((String)adResp.get(FIELD_STATUS)));
             if(adResp.get(FIELD_CREATE_DATE) != null)ad.setCreateDate(new DateTime(adResp.get(FIELD_CREATE_DATE)));
             if(adResp.get(FIELD_GROUP_ID) != null)ad.setGroupId((Integer)adResp.get(FIELD_GROUP_ID));
             if(adResp.get(FIELD_PREMISE_MODE) != null)ad.setPremiseMode((String)adResp.get(FIELD_PREMISE_MODE));

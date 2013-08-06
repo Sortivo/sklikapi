@@ -12,7 +12,7 @@ public class Group {
     private boolean removed;
     private Integer cpc;
     private Integer cpcContext;
-    private String status;
+    private Status status;
     private Integer campaignId;
     private DateTime createDate;
 
@@ -56,11 +56,11 @@ public class Group {
         this.cpcContext = cpcContext;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

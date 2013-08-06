@@ -88,7 +88,7 @@ public class GroupDAO {
         map.put(FIELD_REMOVED, g.isRemoved());
         map.put(FIELD_CPC, g.getCpc());
         map.put(FIELD_CPC_CONTEXT, g.getCpcContext());
-        map.put(FIELD_STATUS, g.getStatus());
+        map.put(FIELD_STATUS, g.getStatus().getStatusText());
         map.put(FIELD_CAMPAIGN_ID, g.getCampaignId());
         map.put(FIELD_CREATE_DATE, g.getCreateDate());
         return map;
@@ -102,7 +102,7 @@ public class GroupDAO {
             if(groupRes.get(FIELD_REMOVED) != null)g.setRemoved((boolean)groupRes.get(FIELD_REMOVED));
             if(groupRes.get(FIELD_CPC) != null)g.setCpc((Integer)groupRes.get(FIELD_CPC));
             if(groupRes.get(FIELD_CPC_CONTEXT) != null)g.setCpcContext((Integer)groupRes.get(FIELD_CPC_CONTEXT));
-            if(groupRes.get(FIELD_STATUS) != null)g.setStatus((String)groupRes.get(FIELD_STATUS));
+            if(groupRes.get(FIELD_STATUS) != null)g.setStatus(Status.getStatus((String)groupRes.get(FIELD_STATUS)));
             if(groupRes.get(FIELD_CAMPAIGN_ID) != null)g.setId((Integer)groupRes.get(FIELD_CAMPAIGN_ID));
             if(groupRes.get(FIELD_CREATE_DATE) != null)g.setCreateDate(new DateTime(groupRes.get(FIELD_CREATE_DATE)));
             return g; 

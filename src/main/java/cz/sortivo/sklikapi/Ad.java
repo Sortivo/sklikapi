@@ -19,7 +19,7 @@ public class Ad {
     private String clickthruText;
     private String clickthruUrl;
     private boolean removed;
-    private String status;
+    private Status status;
     private DateTime createDate;
     private Integer groupId;
     private String premiseMode;
@@ -101,11 +101,11 @@ public class Ad {
         this.removed = removed;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
