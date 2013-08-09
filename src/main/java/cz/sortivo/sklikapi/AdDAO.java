@@ -19,6 +19,7 @@ public class AdDAO {
     private static final String LIST_ADS_METHOD_NAME = "listAds";
     private static final String CREATE_AD_METHOD_NAME = "ad.create";
     private static final String REMOVE_AD_METHOD_NAME = "ad.remove";
+    private static final String RESTORE_AD_METHOD_NAME = "ad.remove";
     private static final String SET_ATTRIBUTES_METHOD_NAME = "ad.setAttributes";
     
     private static final String FIELD_ID= "id";
@@ -67,6 +68,10 @@ public class AdDAO {
     public boolean remove(int adId) throws InvalideRequestException, SKlikException{
         client.sendRequest(REMOVE_AD_METHOD_NAME, new Object[]{adId});
         return true;
+    }
+    
+    public void restore(int adId) throws InvalideRequestException, SKlikException{
+        client.sendRequest(RESTORE_AD_METHOD_NAME, new Object[]{adId});
     }
     
     public boolean setActive(int adId) throws InvalideRequestException, SKlikException{

@@ -20,6 +20,7 @@ public class GroupDAO {
     private static final String LIST_GROUPS_METHOD_NAME = "listGroups";
     private static final String CREATE_GROUP_METHOD_NAME = "group.create";
     private static final String REMOVE_GROUP_METHOD_NAME = "group.remove";
+    private static final String RESTORE_GROUP_METHOD_NAME = "group.restore";
     private static final String SET_ATTRIBUTES_METHOD_NAME = "group.setAttributes";
     
     private static final String FIELD_ID = "id";
@@ -64,6 +65,10 @@ public class GroupDAO {
     public boolean remove(int groupId) throws InvalideRequestException, SKlikException{
         client.sendRequest(REMOVE_GROUP_METHOD_NAME, new Object[]{groupId});
         return true;
+    }
+    
+    public void restore(int groupId )throws InvalideRequestException, SKlikException{
+        client.sendRequest(RESTORE_GROUP_METHOD_NAME, new Object[]{groupId});
     }
     
     public boolean setActive(int groupId) throws InvalideRequestException, SKlikException{

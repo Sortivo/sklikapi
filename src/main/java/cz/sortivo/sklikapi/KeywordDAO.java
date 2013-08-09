@@ -16,6 +16,7 @@ public class KeywordDAO {
     private static final String LIST_KEYWORDS_METHOD_NAME = "listKeywords";
     private static final String CREATE_KEYWORD_METHOD_NAME = "keyword.create";
     private static final String REMOVE_KEYWORD_METHOD_NAME = "keyword.remove";
+    private static final String RESTORE_KEYWORD_METHOD_NAME = "keyword.restore";
     private static final String SET_ATTRIBUTES_METHOD_NAME = "keyword.setAttributes";
     
     private static final String FIELD_ID = "id";
@@ -63,6 +64,10 @@ public class KeywordDAO {
     public boolean remove(int keywordId) throws InvalideRequestException, SKlikException{
         client.sendRequest(REMOVE_KEYWORD_METHOD_NAME, new Object[]{keywordId});
         return true;
+    }
+    
+    public void restore(int keywordId) throws InvalideRequestException, SKlikException{
+        client.sendRequest(RESTORE_KEYWORD_METHOD_NAME, new Object[]{keywordId});
     }
     
     public boolean setActive(int keywordId) throws InvalideRequestException, SKlikException{
