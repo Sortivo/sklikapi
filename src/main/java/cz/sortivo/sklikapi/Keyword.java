@@ -14,9 +14,9 @@ public class Keyword {
     
     private Integer id;
     private String name;
-    private String matchType;
+    private MatchType matchType;
     private boolean removed;
-    private String status;
+    private Status status;
     private boolean disabled;
     private Integer cpc;
     private String url;
@@ -40,11 +40,11 @@ public class Keyword {
         this.name = name;
     }
 
-    public String getMatchType() {
+    public MatchType getMatchType() {
         return matchType;
     }
 
-    public void setMatchType(String matchType) {
+    public void setMatchType(MatchType matchType) {
         this.matchType = matchType;
     }
 
@@ -56,11 +56,14 @@ public class Keyword {
         this.removed = removed;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
+        if (status == null){
+            return Status.ACTIVE;
+        }
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

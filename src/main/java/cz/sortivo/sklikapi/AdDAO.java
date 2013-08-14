@@ -19,6 +19,7 @@ public class AdDAO {
     private static final String LIST_ADS_METHOD_NAME = "listAds";
     private static final String CREATE_AD_METHOD_NAME = "ad.create";
     private static final String REMOVE_AD_METHOD_NAME = "ad.remove";
+    private static final String RESTORE_AD_METHOD_NAME = "ad.remove";
     private static final String SET_ATTRIBUTES_METHOD_NAME = "ad.setAttributes";
     
     private static final String FIELD_ID= "id";
@@ -69,6 +70,10 @@ public class AdDAO {
         return true;
     }
     
+    public void restore(int adId) throws InvalideRequestException, SKlikException{
+        client.sendRequest(RESTORE_AD_METHOD_NAME, new Object[]{adId});
+    }
+    
     public boolean setActive(int adId) throws InvalideRequestException, SKlikException{
         return setAttributes(adId, new Attributes(Status.ACTIVE));
     }
@@ -93,7 +98,7 @@ public class AdDAO {
         map.put(FIELD_CLICKTHRU_TEXT, ad.getClickthruText());
         map.put(FIELD_CLICKTHRU_URL, ad.getClickthruUrl());
         map.put(FIELD_REMOVED, ad.isRemoved());
-        map.put(FIELD_STATUS, ad.getStatus());
+        map.put(FIELD_STATUS, ad.getStatus().getStatusText());
         map.put(FIELD_CREATE_DATE, ad.getCreateDate());
         map.put(FIELD_GROUP_ID, ad.getGroupId());
         map.put(FIELD_PREMISE_MODE, ad.getPremiseMode());
@@ -112,7 +117,7 @@ public class AdDAO {
             if(adResp.get(FIELD_CLICKTHRU_TEXT) != null)ad.setClickthruText((String)adResp.get(FIELD_CLICKTHRU_TEXT));
             if(adResp.get(FIELD_CLICKTHRU_URL) != null)ad.setClickthruUrl((String)adResp.get(FIELD_CLICKTHRU_URL));
             if(adResp.get(FIELD_REMOVED) != null)ad.setRemoved((boolean)adResp.get(FIELD_REMOVED));
-            if(adResp.get(FIELD_STATUS) != null)ad.setStatus((String)adResp.get(FIELD_STATUS));
+            if(adResp.get(FIELD_STATUS) != null)ad.setStatus(Status.getStatus((String)adResp.get(FIELD_STATUS)));
             if(adResp.get(FIELD_CREATE_DATE) != null)ad.setCreateDate(new DateTime(adResp.get(FIELD_CREATE_DATE)));
             if(adResp.get(FIELD_GROUP_ID) != null)ad.setGroupId((Integer)adResp.get(FIELD_GROUP_ID));
             if(adResp.get(FIELD_PREMISE_MODE) != null)ad.setPremiseMode((String)adResp.get(FIELD_PREMISE_MODE));

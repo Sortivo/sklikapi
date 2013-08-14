@@ -21,4 +21,15 @@ public enum Status {
     public String getStatusText(){
         return statusText;
     }
+    
+    public static Status getStatus(String statusText){
+        if (statusText.equalsIgnoreCase("active")){
+            return Status.ACTIVE;
+        } 
+        if (statusText.equalsIgnoreCase("suspend")){
+            return Status.SUSPEND;
+        } 
+
+        return null;
+    }
 }

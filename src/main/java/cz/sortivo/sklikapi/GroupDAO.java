@@ -20,6 +20,7 @@ public class GroupDAO {
     private static final String LIST_GROUPS_METHOD_NAME = "listGroups";
     private static final String CREATE_GROUP_METHOD_NAME = "group.create";
     private static final String REMOVE_GROUP_METHOD_NAME = "group.remove";
+    private static final String RESTORE_GROUP_METHOD_NAME = "group.restore";
     private static final String SET_ATTRIBUTES_METHOD_NAME = "group.setAttributes";
     
     private static final String FIELD_ID = "id";
@@ -66,6 +67,10 @@ public class GroupDAO {
         return true;
     }
     
+    public void restore(int groupId )throws InvalideRequestException, SKlikException{
+        client.sendRequest(RESTORE_GROUP_METHOD_NAME, new Object[]{groupId});
+    }
+    
     public boolean setActive(int groupId) throws InvalideRequestException, SKlikException{
         return setAttributes(groupId, new Attributes(Status.ACTIVE));
     }
@@ -88,7 +93,7 @@ public class GroupDAO {
         map.put(FIELD_REMOVED, g.isRemoved());
         map.put(FIELD_CPC, g.getCpc());
         map.put(FIELD_CPC_CONTEXT, g.getCpcContext());
-        map.put(FIELD_STATUS, g.getStatus());
+        map.put(FIELD_STATUS, g.getStatus().getStatusText());
         map.put(FIELD_CAMPAIGN_ID, g.getCampaignId());
         map.put(FIELD_CREATE_DATE, g.getCreateDate());
         return map;
@@ -102,7 +107,7 @@ public class GroupDAO {
             if(groupRes.get(FIELD_REMOVED) != null)g.setRemoved((boolean)groupRes.get(FIELD_REMOVED));
             if(groupRes.get(FIELD_CPC) != null)g.setCpc((Integer)groupRes.get(FIELD_CPC));
             if(groupRes.get(FIELD_CPC_CONTEXT) != null)g.setCpcContext((Integer)groupRes.get(FIELD_CPC_CONTEXT));
-            if(groupRes.get(FIELD_STATUS) != null)g.setStatus((String)groupRes.get(FIELD_STATUS));
+            if(groupRes.get(FIELD_STATUS) != null)g.setStatus(Status.getStatus((String)groupRes.get(FIELD_STATUS)));
             if(groupRes.get(FIELD_CAMPAIGN_ID) != null)g.setId((Integer)groupRes.get(FIELD_CAMPAIGN_ID));
             if(groupRes.get(FIELD_CREATE_DATE) != null)g.setCreateDate(new DateTime(groupRes.get(FIELD_CREATE_DATE)));
             return g; 

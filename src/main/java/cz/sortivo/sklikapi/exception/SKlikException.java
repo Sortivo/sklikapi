@@ -43,7 +43,7 @@ public class SKlikException extends Exception{
                 }
             }
         }
-        
+        if (errorsStr.length() < 2) return "Error " + getStatus() + ": " + getMessage();
         return errorsStr.substring(0, errorsStr.length() - 2);
     }
 }
