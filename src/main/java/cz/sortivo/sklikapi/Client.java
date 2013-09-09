@@ -27,6 +27,8 @@ public class Client {
     private static final String LOGIN_METHOD_NAME = "client.login";
     private static final String CLIENT_ATTRIBUTES_METHOD_NAME = "client.getAttributes";
     
+    private int userId;
+    
     private XmlRpcClient rpcClient;
     
     public Client() throws InvalideRequestException{
@@ -92,6 +94,15 @@ public class Client {
             throw new InvalideRequestException("XML-RPC Exception for " + Arrays.toString(params), ex);
         }
     }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+    
     
     
 }
