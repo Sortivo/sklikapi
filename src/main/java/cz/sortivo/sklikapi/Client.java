@@ -25,6 +25,7 @@ public class Client {
     private boolean useSandbox;
     
     private static final String LOGIN_METHOD_NAME = "client.login";
+    private static final String CLIENT_ATTRIBUTES_METHOD_NAME = "client.getAttributes";
     
     private XmlRpcClient rpcClient;
     
@@ -57,6 +58,10 @@ public class Client {
         Map<String, Object> resp = send(LOGIN_METHOD_NAME, new String[]{username, password});
         session = (String) resp.get("session");
         return resp;
+    }
+    
+    public Map<String, Object> getAttributes()throws InvalideRequestException, SKlikException{
+        return sendRequest(CLIENT_ATTRIBUTES_METHOD_NAME, new Object[]{});
     }
     
     public Map<String, Object> sendRequest(String method, Object[] params) throws InvalideRequestException, SKlikException{
