@@ -27,7 +27,7 @@ public class Client {
     private static final String LOGIN_METHOD_NAME = "client.login";
     private static final String CLIENT_ATTRIBUTES_METHOD_NAME = "client.getAttributes";
     
-    private int userId;
+    private Account account;
     
     private XmlRpcClient rpcClient;
     
@@ -95,13 +95,15 @@ public class Client {
         }
     }
 
-    public int getUserId() {
-        return userId;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setAccount(Account account) {
+        this.account = account;
     }
+
+    
     
     
     
