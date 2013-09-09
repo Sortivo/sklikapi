@@ -42,7 +42,15 @@ public class CampaignDAO {
     }
     
     public List<Campaign> listCampaigns() throws InvalideRequestException, SKlikException{
-        Map<String, Object> response = client.sendRequest(LIST_CAMPAIGNS_METHOD_NAME, new Object[]{});
+        return listCampaigns(new Object[]{});
+    }
+    
+    public List<Campaign> listCampaigns(int userId) throws InvalideRequestException, SKlikException{
+        return listCampaigns(new Object[]{userId});
+    }
+    
+    private List<Campaign> listCampaigns(Object[] params) throws InvalideRequestException, SKlikException{
+        Map<String, Object> response = client.sendRequest(LIST_CAMPAIGNS_METHOD_NAME, params);
         List<Campaign> campaigns = new ArrayList<>();
         Object[] respCampaigns = (Object[]) response.get("campaigns");
         
@@ -51,6 +59,7 @@ public class CampaignDAO {
         }
         return campaigns;
     }
+    
     /**
      * 
      * @param campaign
