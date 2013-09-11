@@ -74,7 +74,7 @@ public class Client {
         return sendRequest(CLIENT_ATTRIBUTES_METHOD_NAME, new Object[]{});
     }
     
-    public List<ForeignAccount> getForeignActiveAccounts() throws InvalideRequestException, SKlikException{
+    public List<ForeignAccount> getForeignActiveAccounts(boolean addOwnAccount) throws InvalideRequestException, SKlikException{
         Map<String, Object> attributes = sendRequest(CLIENT_ATTRIBUTES_METHOD_NAME, new Object[]{}); 
         Object[] accounts = (Object[]) attributes.get("foreignAccounts");
         List<ForeignAccount> activeAccounts = new ArrayList<>();
@@ -86,7 +86,19 @@ public class Client {
                 activeAccounts.add(fAccount);
             }
         }
+        if (addOwnAccount){
+            ForeignAccount fAccount = new ForeignAccount();
+            Map<String, Object> userInfo = (Map<String, Object>) attributes.get("user");
+            fAccount.setRelationName("Vlastní");
+            fAccount.setUserId((Integer) userInfo.get(FIELD_USER_ID));
+            fAccount.setUsername((String) userInfo.get(FIELD_USERNAME));
+            activeAccounts.add(fAccount);
+        }
         return activeAccounts;
+    }
+    
+    public List<ForeignAccount> getForeignActiveAccounts() throws InvalideRequestException, SKlikException{
+        return getForeignActiveAccounts(false);
     }
     
     public Map<String, Object> sendRequest(String method, Object[] params) throws InvalideRequestException, SKlikException{
