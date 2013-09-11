@@ -73,7 +73,13 @@ public class Client {
     public Map<String, Object> getAttributes()throws InvalideRequestException, SKlikException{
         return sendRequest(CLIENT_ATTRIBUTES_METHOD_NAME, new Object[]{});
     }
-    
+    /**
+     * 
+     * @param addOwnAccount - add own account to the return list
+     * @return
+     * @throws InvalideRequestException
+     * @throws SKlikException 
+     */
     public List<ForeignAccount> getForeignActiveAccounts(boolean addOwnAccount) throws InvalideRequestException, SKlikException{
         Map<String, Object> attributes = sendRequest(CLIENT_ATTRIBUTES_METHOD_NAME, new Object[]{}); 
         Object[] accounts = (Object[]) attributes.get("foreignAccounts");
