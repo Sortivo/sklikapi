@@ -59,7 +59,6 @@ public class CampaignDAO {
         }
         return campaigns;
     }
-    
     /**
      * 
      * @param campaign
@@ -68,7 +67,22 @@ public class CampaignDAO {
      * @throws SKlikException 
      */
     public Integer create(Campaign campaign) throws InvalideRequestException, SKlikException{
-        Map<String, Object> resp = client.sendRequest(CREATE_CAMPAIGN_METHOD_NAME, new Object[]{transformFromObject(campaign)});
+        return create(new Object[]{transformFromObject(campaign)});
+    }
+    /**
+     * 
+     * @param campaign
+     * @param userId
+     * @return ID of new Campaign
+     * @throws InvalideRequestException
+     * @throws SKlikException 
+     */
+    public Integer create(Campaign campaign, int userId) throws InvalideRequestException, SKlikException{
+        return create(new Object[]{transformFromObject(campaign), userId});
+    }
+    
+    private Integer create(Object[] params) throws InvalideRequestException, SKlikException{
+        Map<String, Object> resp = client.sendRequest(CREATE_CAMPAIGN_METHOD_NAME, params);
         return (Integer)resp.get("campaignId");
     }
     
