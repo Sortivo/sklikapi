@@ -10,7 +10,7 @@ import org.joda.time.DateTime;
  *
  * @author Jan Dufek
  */
-public class Ad {
+public class Ad  implements SKlikObject{
     
     private Integer id;
     private String creative1;

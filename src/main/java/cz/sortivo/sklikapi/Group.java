@@ -5,7 +5,7 @@ import org.joda.time.DateTime;
  *
  * @author Jan Dufek
  */
-public class Group {
+public class Group implements SKlikObject {
     
     private Integer id;
     private String name;

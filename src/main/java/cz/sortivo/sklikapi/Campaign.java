@@ -10,7 +10,7 @@ import org.joda.time.DateTime;
  *
  * @author Jan Dufek
  */
-public class Campaign {
+public class Campaign implements SKlikObject {
     private Integer id;
     private String name;
     private boolean removed;
@@ -26,6 +26,7 @@ public class Campaign {
     private Integer premiseId;
     private DateTime startDate;
     private DateTime endDate;
+    
     
     public final static String STATUS_ACTIVE = "active";
     public final static String STATUS_SUSPEND = "suspend";

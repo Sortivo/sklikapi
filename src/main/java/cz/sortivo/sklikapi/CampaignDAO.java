@@ -59,6 +59,7 @@ public class CampaignDAO {
         }
         return campaigns;
     }
+    
     /**
      * 
      * @param campaign

@@ -10,7 +10,7 @@ import org.joda.time.DateTime;
  *
  * @author Jan Dufek
  */
-public class Keyword {
+public class Keyword implements SKlikObject {
     
     private Integer id;
     private String name;
