@@ -11,6 +11,7 @@ package cz.sortivo.sklikapi;
 public class Attributes {
     
     private Status status;
+    private Integer cpc;
     
     public Attributes(Status status){
         this.status = status;

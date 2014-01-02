@@ -79,10 +79,19 @@ public class GroupDAO {
         return setAttributes(groupId, new Attributes(Status.SUSPEND));
     }
     
+    public boolean setKeywordMaxCpc(int groupId, int cpc)throws InvalideRequestException, SKlikException{
+        return setAttributes(groupId, new Attributes(Status.SUSPEND));
+    }
+    
     public boolean setAttributes(int groupId, Attributes attributes) throws InvalideRequestException, SKlikException{
         Map<String, Object> map = new HashMap<>();
         map.put(FIELD_STATUS, attributes.getStatus().getStatusText());
         client.sendRequest(SET_ATTRIBUTES_METHOD_NAME, new Object[]{groupId, map});
+        return true;
+    }
+    
+    public boolean setAttributes(Group group)throws InvalideRequestException, SKlikException{
+        client.sendRequest(SET_ATTRIBUTES_METHOD_NAME, new Object[]{group.getId(), transformFromObject(group)});
         return true;
     }
     
