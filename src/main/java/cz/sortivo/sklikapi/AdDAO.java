@@ -21,6 +21,7 @@ public class AdDAO {
     private static final String REMOVE_AD_METHOD_NAME = "ad.remove";
     private static final String RESTORE_AD_METHOD_NAME = "ad.remove";
     private static final String SET_ATTRIBUTES_METHOD_NAME = "ad.setAttributes";
+    private static final String  GET_ATTRIBUTES_METHOD_NAME = "ad.getAttributes";
     
     private static final String FIELD_ID= "id";
     private static final String FIELD_CREATIVE_1= "creative1";
@@ -82,10 +83,27 @@ public class AdDAO {
         return setAttributes(adId, new Attributes(Status.SUSPEND));
     }
     
+    /**
+     * Return existing ad object by id 
+     * @param adId - unique sklik ad id
+     * @return - ad object
+     * @throws InvalideRequestException
+     * @throws SKlikException
+     */
+    public Ad getAttributes(Long adId) throws InvalideRequestException, SKlikException{
+        return transformToObject(client.sendRequest(GET_ATTRIBUTES_METHOD_NAME, new Object[]{adId}));
+    }
+    
     public boolean setAttributes(int adId, Attributes attributes) throws InvalideRequestException, SKlikException{
         Map<String, Object> map = new HashMap<>();
         map.put(FIELD_STATUS, attributes.getStatus().getStatusText());
         client.sendRequest(SET_ATTRIBUTES_METHOD_NAME, new Object[]{adId, map});
+        return true;
+    }
+    
+    public boolean setAttributes(int adId, Ad ad) throws InvalideRequestException, SKlikException{
+        Map<String, Object> attributes = transformFromObject(ad);
+        client.sendRequest(SET_ATTRIBUTES_METHOD_NAME, new Object[]{adId, attributes});
         return true;
     }
     

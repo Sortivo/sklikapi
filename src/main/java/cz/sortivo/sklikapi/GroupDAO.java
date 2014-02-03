@@ -22,6 +22,7 @@ public class GroupDAO {
     private static final String REMOVE_GROUP_METHOD_NAME = "group.remove";
     private static final String RESTORE_GROUP_METHOD_NAME = "group.restore";
     private static final String SET_ATTRIBUTES_METHOD_NAME = "group.setAttributes";
+    private static final String GET_ATTRIBUTES_METHOD_NAME = "group.getAttributes";
     
     private static final String FIELD_ID = "id";
     private static final String FIELD_NAME = "name";
@@ -93,6 +94,10 @@ public class GroupDAO {
     public boolean setAttributes(Group group)throws InvalideRequestException, SKlikException{
         client.sendRequest(SET_ATTRIBUTES_METHOD_NAME, new Object[]{group.getId(), transformFromObject(group)});
         return true;
+    }
+    
+    public Group getAttributes(int groupId) throws InvalideRequestException, SKlikException{
+        return transformToObject((Map<String, Object>)client.sendRequest(GET_ATTRIBUTES_METHOD_NAME, new Object[]{groupId}).get("group"));
     }
     
     private Map<String, Object> transformFromObject(Group g){

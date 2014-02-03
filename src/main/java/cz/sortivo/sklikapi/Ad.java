@@ -12,6 +12,7 @@ import org.joda.time.DateTime;
  */
 public class Ad  implements SKlikObject{
     
+    
     private Integer id;
     private String creative1;
     private String creative2;
@@ -24,6 +25,25 @@ public class Ad  implements SKlikObject{
     private Integer groupId;
     private String premiseMode;
     private Integer premiseId;
+
+    public Ad(Ad ad) {
+        this.id = ad.getId();
+        this.creative1 = ad.getCreative1();
+        this.creative2 = ad.getCreative2();
+        this.creative3 = ad.getCreative3();
+        this.clickthruText = ad.getClickthruText();
+        this.clickthruUrl = ad.getClickthruUrl();
+        this.removed = ad.isRemoved();
+        this.status = ad.getStatus();
+        this.createDate = ad.getCreateDate();
+        this.groupId = ad.getGroupId();
+        this.premiseMode = ad.getPremiseMode();
+        this.premiseId = ad.getPremiseId();
+    }
+    
+    public Ad(){
+        
+    }
 
     public Integer getId() {
         return id;
@@ -128,7 +148,61 @@ public class Ad  implements SKlikObject{
         this.premiseMode = premiseMode;
     }
 
-    
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((clickthruText == null) ? 0 : clickthruText.hashCode());
+        result = prime * result + ((clickthruUrl == null) ? 0 : clickthruUrl.hashCode());
+        result = prime * result + ((createDate == null) ? 0 : createDate.hashCode());
+        result = prime * result + ((creative1 == null) ? 0 : creative1.hashCode());
+        result = prime * result + ((creative2 == null) ? 0 : creative2.hashCode());
+        result = prime * result + ((creative3 == null) ? 0 : creative3.hashCode());
+        return result;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Ad other = (Ad) obj;
+        if (clickthruText == null) {
+            if (other.clickthruText != null)
+                return false;
+        } else if (!clickthruText.equals(other.clickthruText))
+            return false;
+        if (clickthruUrl == null) {
+            if (other.clickthruUrl != null)
+                return false;
+        } else if (!clickthruUrl.equals(other.clickthruUrl))
+            return false;
+        if (creative1 == null) {
+            if (other.creative1 != null)
+                return false;
+        } else if (!creative1.equals(other.creative1))
+            return false;
+        if (creative2 == null) {
+            if (other.creative2 != null)
+                return false;
+        } else if (!creative2.equals(other.creative2))
+            return false;
+        if (creative3 == null) {
+            if (other.creative3 != null)
+                return false;
+        } else if (!creative3.equals(other.creative3))
+            return false;
+        return true;
+    }
     
     
 }

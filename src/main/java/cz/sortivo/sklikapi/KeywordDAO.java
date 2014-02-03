@@ -153,4 +153,8 @@ public class KeywordDAO {
         
     }
 
+    public void setAttributes(Keyword keyword) throws InvalideRequestException, SKlikException {
+        client.sendRequest(SET_ATTRIBUTES_METHOD_NAME, new Object[]{keyword.getId(), transformFromObject(keyword)});
+    }
+
 }
