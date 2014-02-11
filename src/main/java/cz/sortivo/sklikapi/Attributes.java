@@ -13,6 +13,10 @@ public class Attributes {
     private Status status;
     private Integer cpc;
     
+    public Attributes(){
+        
+    }
+    
     public Attributes(Status status){
         this.status = status;
     }
@@ -23,6 +27,14 @@ public class Attributes {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Integer getCpc() {
+        return cpc;
+    }
+
+    public void setCpc(Integer cpc) {
+        this.cpc = cpc;
     }
     
     

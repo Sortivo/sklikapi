@@ -4,6 +4,8 @@
  */
 package cz.sortivo.sklikapi;
 
+import java.util.List;
+
 import org.joda.time.DateTime;
 
 /**
@@ -25,7 +27,7 @@ public class Ad  implements SKlikObject{
     private Integer groupId;
     private String premiseMode;
     private Integer premiseId;
-
+    
     public Ad(Ad ad) {
         this.id = ad.getId();
         this.creative1 = ad.getCreative1();
@@ -203,6 +205,6 @@ public class Ad  implements SKlikObject{
             return false;
         return true;
     }
-    
+
     
 }

@@ -33,7 +33,7 @@ public class XmlRpcTypeNil extends TypeFactoryImpl {
  
     @Override
     public TypeSerializer getSerializer(XmlRpcStreamConfig pConfig, Object pObject) throws SAXException {
-            if (pObject instanceof XmlRpcTypeNil) return new NullSerializer();
+            if (pObject == null) return new SklikNullSerializer();
             else return super.getSerializer(pConfig, pObject);
     }
 }

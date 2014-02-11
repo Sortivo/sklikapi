@@ -94,18 +94,18 @@ public class CampaignDAO {
     
     private Map<String, Object> transformFromObject(Campaign campaign){
         Map<String, Object> map = new HashMap<>();
-        map.put(FIELD_ID, campaign.getId());
-        map.put(FIELD_NAME, campaign.getName());
-        map.put(FIELD_REMOVED, campaign.isRemoved());
-        map.put(FIELD_STATUS, campaign.getStatus());
-        map.put(FIELD_DAY_BUDGET, campaign.getDayBudget());
-        map.put(FIELD_AD_SELECTION, campaign.getAdSelection());
-        map.put(FIELD_CREATE_DATE, campaign.getCreateDate());
-        map.put(FIELD_TOTAL_BUDGET, campaign.getTotalBudget());
-        map.put(FIELD_TOTAL_CLICKS, campaign.getTotalClicks());
-        map.put(FIELD_PREMISE_ID, campaign.getPremiseId());
-        map.put(FIELD_START_DATE, campaign.getStartDate());
-        map.put(FIELD_END_DATE, campaign.getEndDate());
+        if (campaign.getId() != null)map.put(FIELD_ID, campaign.getId());
+        if (campaign.getName() != null)map.put(FIELD_NAME, campaign.getName());
+        if (campaign.getId() != null)map.put(FIELD_REMOVED, campaign.isRemoved());
+        if (campaign.getStatus() != null)map.put(FIELD_STATUS, campaign.getStatus());
+        if (campaign.getDayBudget() != null)map.put(FIELD_DAY_BUDGET, campaign.getDayBudget());
+        if (campaign.getAdSelection() != null)map.put(FIELD_AD_SELECTION, campaign.getAdSelection());
+        if (campaign.getCreateDate() != null)map.put(FIELD_CREATE_DATE, campaign.getCreateDate());
+        if (campaign.getTotalBudget() != null)map.put(FIELD_TOTAL_BUDGET, campaign.getTotalBudget());
+        if (campaign.getTotalClicks() != null)map.put(FIELD_TOTAL_CLICKS, campaign.getTotalClicks());
+        if (campaign.getPremiseId() != null)map.put(FIELD_PREMISE_ID, campaign.getPremiseId());
+        if (campaign.getStartDate() != null)map.put(FIELD_START_DATE, campaign.getStartDate());
+        if (campaign.getEndDate() != null)map.put(FIELD_END_DATE, campaign.getEndDate());
         return map;
     }
 

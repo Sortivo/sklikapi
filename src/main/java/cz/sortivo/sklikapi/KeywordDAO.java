@@ -1,12 +1,15 @@
 package cz.sortivo.sklikapi;
 
-import cz.sortivo.sklikapi.exception.InvalideRequestException;
-import cz.sortivo.sklikapi.exception.SKlikException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.joda.time.DateTime;
+
+import cz.sortivo.sklikapi.exception.InvalideRequestException;
+import cz.sortivo.sklikapi.exception.SKlikException;
 
 /**
  * http://api.sklik.cz/listKeywords.html
@@ -80,7 +83,24 @@ public class KeywordDAO {
     
     public boolean setAttributes(int keywordId, Attributes attributes) throws InvalideRequestException, SKlikException{
         Map<String, Object> map = new HashMap<>();
-        map.put(FIELD_STATUS, attributes.getStatus().getStatusText());
+        
+        boolean attributeSet = false;
+        if (attributes.getCpc() != null){
+            if (attributes.getCpc() == -1){
+                map.put(FIELD_CPC, null);
+            }else{
+                map.put(FIELD_CPC, attributes.getCpc());
+            }
+            attributeSet = true;
+        }
+        if (attributes.getStatus() != null){
+            map.put(FIELD_STATUS, attributes.getStatus().getStatusText());
+            attributeSet = true;
+        }
+        if (!attributeSet){
+            return false;
+        }
+
         client.sendRequest(SET_ATTRIBUTES_METHOD_NAME, new Object[]{keywordId, map});
         return true;
     }
@@ -107,17 +127,29 @@ public class KeywordDAO {
     private Map<String, Object> transformFromObject(Keyword keyword){
         checkMatchType(keyword);
         Map<String, Object> map = new HashMap<>();
-        map.put(FIELD_ID, keyword.getId());
-        map.put(FIELD_NAME, keyword.getName());
-        map.put(FIELD_MATCH_TYPE, keyword.getMatchType().getMatchTypeText());
+        if (keyword.getId() != null)map.put(FIELD_ID, keyword.getId());
+        if (keyword.getName() != null)map.put(FIELD_NAME, keyword.getName());
+        if (keyword.getMatchType() != null)map.put(FIELD_MATCH_TYPE, keyword.getMatchType().getMatchTypeText());
         map.put(FIELD_REMOVED, keyword.isRemoved());
-        map.put(FIELD_STATUS, keyword.getStatus().getStatusText());
+        if (keyword.getStatus() != null)map.put(FIELD_STATUS, keyword.getStatus().getStatusText());
         map.put(FIELD_DISABLED, keyword.isDisabled());
-        map.put(FIELD_CPC, keyword.getCpc());
-        map.put(FIELD_CREATE_DATE, keyword.getCreateDate());
-        map.put(FIELD_URL, keyword.getUrl());
-        map.put(FIELD_GROUP_ID, keyword.getGroupId());
-        map.put(FIELD_MIN_CPC, keyword.getMinCpc());
+        if (keyword.getCpc() != null){
+            if (keyword.getCpc() == -1){
+                map.put(FIELD_CPC, null);
+            }else{
+                map.put(FIELD_CPC, keyword.getCpc());
+            }
+        }
+        if (keyword.getCreateDate() != null)map.put(FIELD_CREATE_DATE, keyword.getCreateDate());
+        if (keyword.getUrl() != null)map.put(FIELD_URL, keyword.getUrl());
+        if (keyword.getGroupId() != null)map.put(FIELD_GROUP_ID, keyword.getGroupId());
+        if (keyword.getMinCpc() != null){
+            if (keyword.getMinCpc() == -1){
+                map.put(FIELD_MIN_CPC, null);
+            }else{
+                map.put(FIELD_MIN_CPC, keyword.getCpc());
+            }
+        }
         return map;
     }
     

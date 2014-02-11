@@ -109,18 +109,18 @@ public class AdDAO {
     
     private Map<String, Object> transformFromObject(Ad ad){
         Map<String, Object> map = new HashMap<>();
-        map.put(FIELD_ID, ad.getId());
-        map.put(FIELD_CREATIVE_1, ad.getCreative1());
-        map.put(FIELD_CREATIVE_2, ad.getCreative2());
-        map.put(FIELD_CREATIVE_3, ad.getCreative3());
-        map.put(FIELD_CLICKTHRU_TEXT, ad.getClickthruText());
-        map.put(FIELD_CLICKTHRU_URL, ad.getClickthruUrl());
+        if (ad.getId() != null)map.put(FIELD_ID, ad.getId());
+        if (ad.getCreative1() != null)map.put(FIELD_CREATIVE_1, ad.getCreative1());
+        if (ad.getCreative2() != null)map.put(FIELD_CREATIVE_2, ad.getCreative2());
+        if (ad.getCreative3() != null)map.put(FIELD_CREATIVE_3, ad.getCreative3());
+        if (ad.getClickthruText() != null)map.put(FIELD_CLICKTHRU_TEXT, ad.getClickthruText());
+        if (ad.getClickthruUrl() != null)map.put(FIELD_CLICKTHRU_URL, ad.getClickthruUrl());
         map.put(FIELD_REMOVED, ad.isRemoved());
-        map.put(FIELD_STATUS, ad.getStatus().getStatusText());
-        map.put(FIELD_CREATE_DATE, ad.getCreateDate());
-        map.put(FIELD_GROUP_ID, ad.getGroupId());
-        map.put(FIELD_PREMISE_MODE, ad.getPremiseMode());
-        map.put(FIELD_PREMISE_ID, ad.getPremiseId());
+        if (ad.getStatus() != null)map.put(FIELD_STATUS, ad.getStatus().getStatusText());
+        if (ad.getCreateDate() != null)map.put(FIELD_CREATE_DATE, ad.getCreateDate());
+        if (ad.getGroupId() != null)map.put(FIELD_GROUP_ID, ad.getGroupId());
+        if (ad.getPremiseMode() != null)map.put(FIELD_PREMISE_MODE, ad.getPremiseMode());
+        if (ad.getPremiseId() != null)map.put(FIELD_PREMISE_ID, ad.getPremiseId());
 
         return map;
     }

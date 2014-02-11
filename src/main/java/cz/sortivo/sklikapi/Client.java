@@ -58,7 +58,7 @@ public class Client {
             throw new InvalideRequestException("Malformed URL " + getUrl(), ex);
         }
     }
-    
+      
     public final String getUrl(){
         if (useSandbox) return SKLIK_SANDBOX_URL;
         return SKLIK_URL;

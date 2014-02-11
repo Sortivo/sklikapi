@@ -102,14 +102,14 @@ public class GroupDAO {
     
     private Map<String, Object> transformFromObject(Group g){
         Map<String, Object> map = new HashMap<>();
-        map.put(FIELD_ID, g.getId());
-        map.put(FIELD_NAME, g.getName());
+        if (g.getId() != null)map.put(FIELD_ID, g.getId());
+        if (g.getName() != null)map.put(FIELD_NAME, g.getName());
         map.put(FIELD_REMOVED, g.isRemoved());
-        map.put(FIELD_CPC, g.getCpc());
-        map.put(FIELD_CPC_CONTEXT, g.getCpcContext());
-        map.put(FIELD_STATUS, g.getStatus().getStatusText());
-        map.put(FIELD_CAMPAIGN_ID, g.getCampaignId());
-        map.put(FIELD_CREATE_DATE, g.getCreateDate());
+        if (g.getCpc() != null)map.put(FIELD_CPC, g.getCpc());
+        if (g.getCpcContext() != null)map.put(FIELD_CPC_CONTEXT, g.getCpcContext());
+        if (g.getStatus() != null)map.put(FIELD_STATUS, g.getStatus().getStatusText());
+        if (g.getCampaignId() != null)map.put(FIELD_CAMPAIGN_ID, g.getCampaignId());
+        if (g.getCreateDate() != null)map.put(FIELD_CREATE_DATE, g.getCreateDate());
         return map;
     }
 
