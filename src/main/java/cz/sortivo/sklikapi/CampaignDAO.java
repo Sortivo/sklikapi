@@ -18,6 +18,8 @@ public class CampaignDAO {
     private static final String CREATE_CAMPAIGN_METHOD_NAME = "campaign.create";
     private static final String REMOVE_CAMPAIGN_METHOD_NAME = "campaign.remove";
     
+    private static final String ACTIVE_STATUS = "active";
+    
     private static final String FIELD_ID = "id";
     private static final String FIELD_NAME = "name";
     private static final String FIELD_REMOVED = "removed";
@@ -42,20 +44,35 @@ public class CampaignDAO {
     }
     
     public List<Campaign> listCampaigns() throws InvalideRequestException, SKlikException{
-        return listCampaigns(new Object[]{});
+        return listCampaigns(new Object[]{}, false);
     }
     
     public List<Campaign> listCampaigns(int userId) throws InvalideRequestException, SKlikException{
-        return listCampaigns(new Object[]{userId});
+        return listCampaigns(new Object[]{userId}, false);
     }
     
-    private List<Campaign> listCampaigns(Object[] params) throws InvalideRequestException, SKlikException{
+    public List<Campaign> listActiveCampaigns() throws InvalideRequestException, SKlikException{
+        return listCampaigns(new Object[]{}, true);
+    }
+    
+    public List<Campaign> listActiveCampaigns(int userId) throws InvalideRequestException, SKlikException{
+        return listCampaigns(new Object[]{userId}, true);
+    }    
+    
+    private List<Campaign> listCampaigns(Object[] params, boolean onlyActive) throws InvalideRequestException, SKlikException{
         Map<String, Object> response = client.sendRequest(LIST_CAMPAIGNS_METHOD_NAME, params);
         List<Campaign> campaigns = new ArrayList<>();
         Object[] respCampaigns = (Object[]) response.get("campaigns");
         
         for (Object respCampaign : respCampaigns) {
-            campaigns.add(transformToObject((Map<String, Object>)respCampaign));
+            Campaign campaign = transformToObject((Map<String, Object>)respCampaign);
+            if (onlyActive) {
+                if (!campaign.isRemoved() && campaign.getStatus().equals(ACTIVE_STATUS)) {
+                    campaigns.add(campaign);
+                }
+            } else {
+                campaigns.add(campaign);
+            }
         }
         return campaigns;
     }
