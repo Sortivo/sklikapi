@@ -158,6 +158,9 @@ public class KeywordDAO {
         switch (k.getMatchType()){
             case PHRASE: k.setName("\"" + name + "\""); break;
             case EXACT: k.setName("[" + name + "]"); break;
+            case NEGATIVE_BROAD: k.setName("-" + name); break;
+            case NEGATIVE_PHRASE: k.setName("-\"" + name + "\""); break;
+            case NEGATIVE_EXACT: k.setName("-[" + name + "]"); break;
         }
     }
 
