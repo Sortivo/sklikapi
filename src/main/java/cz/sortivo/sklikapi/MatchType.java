@@ -10,9 +10,12 @@ package cz.sortivo.sklikapi;
  */
 public enum MatchType {
     
+    BROAD ("broad"),
     PHRASE ("phrase"),
     EXACT ("exact"),
-    BROAD ("broad");
+    NEGATIVE_BROAD("negativeBroad"),
+    NEGATIVE_PHRASE("negativePhrase"),
+    NEGATIVE_EXACT("negativeExact");
     
     private String matchTypeText;
 
@@ -24,18 +27,26 @@ public enum MatchType {
         return matchTypeText;
     }
     
-    
-    
     public static MatchType getMatchType(String matchTypeText){
+        if (matchTypeText.equalsIgnoreCase("broad")){
+            return MatchType.BROAD;
+        }
         if (matchTypeText.equalsIgnoreCase("phrase")){
             return MatchType.PHRASE;
         } 
         if (matchTypeText.equalsIgnoreCase("exact")){
             return MatchType.EXACT;
         } 
-        if (matchTypeText.equalsIgnoreCase("broad")){
-            return MatchType.BROAD;
+        if (matchTypeText.equalsIgnoreCase("negativeBroad")){
+            return MatchType.NEGATIVE_BROAD;
         } 
+        if (matchTypeText.equalsIgnoreCase("negativePhrase")){
+            return MatchType.NEGATIVE_PHRASE;
+        } 
+        if (matchTypeText.equalsIgnoreCase("negativeExact")){
+            return MatchType.NEGATIVE_EXACT;
+        }         
+        
         return null;
     }
     
