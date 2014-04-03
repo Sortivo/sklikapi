@@ -30,7 +30,7 @@ public class GroupDAO {
     private static final String FIELD_CPC = "cpc";
     private static final String FIELD_CPC_CONTEXT = "cpcContext";
     private static final String FIELD_STATUS = "status";
-    private static final String FIELD_CAMPAIGN_ID = "campaignID";
+    private static final String FIELD_CAMPAIGN_ID = "campaignId";
     private static final String FIELD_CREATE_DATE = "createDate";
     
     private Client client;
@@ -122,7 +122,7 @@ public class GroupDAO {
             if(groupRes.get(FIELD_CPC) != null)g.setCpc((Integer)groupRes.get(FIELD_CPC));
             if(groupRes.get(FIELD_CPC_CONTEXT) != null)g.setCpcContext((Integer)groupRes.get(FIELD_CPC_CONTEXT));
             if(groupRes.get(FIELD_STATUS) != null)g.setStatus(Status.getStatus((String)groupRes.get(FIELD_STATUS)));
-            if(groupRes.get(FIELD_CAMPAIGN_ID) != null)g.setId((Integer)groupRes.get(FIELD_CAMPAIGN_ID));
+            if(groupRes.get(FIELD_CAMPAIGN_ID) != null)g.setCampaignId((Integer)groupRes.get(FIELD_CAMPAIGN_ID));
             if(groupRes.get(FIELD_CREATE_DATE) != null)g.setCreateDate(new DateTime(groupRes.get(FIELD_CREATE_DATE)));
             return g; 
         } catch (NumberFormatException ex){
