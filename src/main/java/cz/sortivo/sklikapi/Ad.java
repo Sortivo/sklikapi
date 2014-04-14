@@ -35,12 +35,7 @@ public class Ad  implements SKlikObject{
         this.creative3 = ad.getCreative3();
         this.clickthruText = ad.getClickthruText();
         this.clickthruUrl = ad.getClickthruUrl();
-        this.removed = ad.isRemoved();
-        this.status = ad.getStatus();
-        this.createDate = ad.getCreateDate();
         this.groupId = ad.getGroupId();
-        this.premiseMode = ad.getPremiseMode();
-        this.premiseId = ad.getPremiseId();
     }
     
     public Ad(){
@@ -148,6 +143,19 @@ public class Ad  implements SKlikObject{
 
     public void setPremiseMode(String premiseMode) {
         this.premiseMode = premiseMode;
+    }
+
+    
+    
+    @Override
+    public String toString() {
+        return "Ad [id=" + id + ", creative1=" + creative1 + ", creative2="
+                + creative2 + ", creative3=" + creative3 + ", clickthruText="
+                + clickthruText + ", clickthruUrl=" + clickthruUrl
+                + ", removed=" + removed + ", status=" + status
+                + ", createDate=" + createDate + ", groupId=" + groupId
+                + ", premiseMode=" + premiseMode + ", premiseId=" + premiseId
+                + "]";
     }
 
     /* (non-Javadoc)
