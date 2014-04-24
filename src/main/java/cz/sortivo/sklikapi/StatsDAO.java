@@ -128,8 +128,9 @@ public class StatsDAO {
             throw new IllegalArgumentException("This type is not suitable for available methods");
         }
         
-        Map<String, Object>[] collection = (Map<String, Object>[]) response.get(fieldCollection);
-        for (Map<String, Object> stat : collection) {
+        Object[] collection = (Object[]) response.get(fieldCollection);
+        for (Object statObj : collection) {
+            Map<String, Object> stat = (Map<String, Object>) statObj;
             Integer id = (Integer) stat.get(fieldEntityId);
             stats.put(id, mapStatsObject(stat, FIELD_STATS));
         }
