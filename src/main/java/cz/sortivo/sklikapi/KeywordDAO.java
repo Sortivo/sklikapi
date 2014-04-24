@@ -7,7 +7,7 @@ import java.util.Map;
 
 import org.joda.time.DateTime;
 
-import cz.sortivo.sklikapi.exception.InvalideRequestException;
+import cz.sortivo.sklikapi.exception.InvalidRequestException;
 import cz.sortivo.sklikapi.exception.SKlikException;
 
 /**
@@ -39,7 +39,7 @@ public class KeywordDAO {
         this.client = client;
     }
     
-    public List<Keyword> listKeywords(int groupId) throws InvalideRequestException, SKlikException{
+    public List<Keyword> listKeywords(int groupId) throws InvalidRequestException, SKlikException{
         Map<String, Object> response = client.sendRequest(LIST_KEYWORDS_METHOD_NAME, new Object[]{groupId});
         List<Keyword> keywords = new ArrayList<>();
         Object[] respKeywords = (Object[]) response.get("keywords");
@@ -55,32 +55,32 @@ public class KeywordDAO {
      * @param groupId
      * @param keyword
      * @return Id of new Keyword
-     * @throws InvalideRequestException
+     * @throws InvalidRequestException
      * @throws SKlikException 
      */
-    public Integer create(int groupId, Keyword keyword) throws InvalideRequestException, SKlikException{
+    public Integer create(int groupId, Keyword keyword) throws InvalidRequestException, SKlikException{
         Map<String, Object> resp = client.sendRequest(CREATE_KEYWORD_METHOD_NAME, new Object[]{groupId, transformFromObject(keyword)});
         return (Integer)resp.get("keywordId");
     }
     
-    public boolean remove(int keywordId) throws InvalideRequestException, SKlikException{
+    public boolean remove(int keywordId) throws InvalidRequestException, SKlikException{
         client.sendRequest(REMOVE_KEYWORD_METHOD_NAME, new Object[]{keywordId});
         return true;
     }
     
-    public void restore(int keywordId) throws InvalideRequestException, SKlikException{
+    public void restore(int keywordId) throws InvalidRequestException, SKlikException{
         client.sendRequest(RESTORE_KEYWORD_METHOD_NAME, new Object[]{keywordId});
     }
     
-    public boolean setActive(int keywordId) throws InvalideRequestException, SKlikException{
+    public boolean setActive(int keywordId) throws InvalidRequestException, SKlikException{
         return setAttributes(keywordId, new Attributes(Status.ACTIVE));
     }
     
-    public boolean setSuspend(int keywordId) throws InvalideRequestException, SKlikException{
+    public boolean setSuspend(int keywordId) throws InvalidRequestException, SKlikException{
         return setAttributes(keywordId, new Attributes(Status.SUSPEND));
     }
     
-    public boolean setAttributes(int keywordId, Attributes attributes) throws InvalideRequestException, SKlikException{
+    public boolean setAttributes(int keywordId, Attributes attributes) throws InvalidRequestException, SKlikException{
         Map<String, Object> map = new HashMap<>();
         
         boolean attributeSet = false;
@@ -163,7 +163,7 @@ public class KeywordDAO {
         }
     }
 
-    private Keyword transformToObject(Map<String, Object> keywordResp) throws InvalideRequestException {
+    private Keyword transformToObject(Map<String, Object> keywordResp) throws InvalidRequestException {
         try{
             Keyword keyword = new Keyword();
             if(keywordResp.get(FIELD_ID) != null) keyword.setId((Integer)keywordResp.get(FIELD_ID));
@@ -182,12 +182,12 @@ public class KeywordDAO {
             
             return keyword; 
         } catch (NumberFormatException ex){
-            throw new InvalideRequestException(ex);
+            throw new InvalidRequestException(ex);
         }
         
     }
 
-    public void setAttributes(Keyword keyword) throws InvalideRequestException, SKlikException {
+    public void setAttributes(Keyword keyword) throws InvalidRequestException, SKlikException {
         client.sendRequest(SET_ATTRIBUTES_METHOD_NAME, new Object[]{keyword.getId(), transformFromObject(keyword)});
     }
 

@@ -8,7 +8,7 @@ import cz.sortivo.sklikapi.Client;
 import cz.sortivo.sklikapi.Keyword;
 import cz.sortivo.sklikapi.KeywordDAO;
 import cz.sortivo.sklikapi.Status;
-import cz.sortivo.sklikapi.exception.InvalideRequestException;
+import cz.sortivo.sklikapi.exception.InvalidRequestException;
 import cz.sortivo.sklikapi.exception.SKlikException;
 
 public class KeywordDAOTest {
@@ -36,7 +36,7 @@ public class KeywordDAOTest {
             
             kwDAO.setAttributes(kw.getId(), a);
            
-        }catch(InvalideRequestException | SKlikException ex){
+        }catch(InvalidRequestException | SKlikException ex){
             ex.printStackTrace();
         }
     }

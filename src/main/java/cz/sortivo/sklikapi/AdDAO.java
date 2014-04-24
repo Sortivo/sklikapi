@@ -1,6 +1,6 @@
 package cz.sortivo.sklikapi;
 
-import cz.sortivo.sklikapi.exception.InvalideRequestException;
+import cz.sortivo.sklikapi.exception.InvalidRequestException;
 import cz.sortivo.sklikapi.exception.SKlikException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +42,7 @@ public class AdDAO {
         this.client = client;
     }
     
-    public List<Ad> listAds(int groupId) throws InvalideRequestException, SKlikException{
+    public List<Ad> listAds(int groupId) throws InvalidRequestException, SKlikException{
         Map<String, Object> response = client.sendRequest(LIST_ADS_METHOD_NAME, new Object[]{groupId});
         List<Ad> ads = new ArrayList<>();
         Object[] adsResp = (Object[]) response.get("ads");
@@ -58,28 +58,28 @@ public class AdDAO {
     * @param groupId
     * @param ad
     * @return id of new Ad
-    * @throws InvalideRequestException
+    * @throws InvalidRequestException
     * @throws SKlikException 
     */
-    public Integer create(int groupId, Ad ad) throws InvalideRequestException, SKlikException{
+    public Integer create(int groupId, Ad ad) throws InvalidRequestException, SKlikException{
         Map<String, Object> resp = client.sendRequest(CREATE_AD_METHOD_NAME, new Object[]{groupId, transformFromObject(ad)});
         return (Integer)resp.get("adId");
     }
     
-    public boolean remove(int adId) throws InvalideRequestException, SKlikException{
+    public boolean remove(int adId) throws InvalidRequestException, SKlikException{
         client.sendRequest(REMOVE_AD_METHOD_NAME, new Object[]{adId});
         return true;
     }
     
-    public void restore(int adId) throws InvalideRequestException, SKlikException{
+    public void restore(int adId) throws InvalidRequestException, SKlikException{
         client.sendRequest(RESTORE_AD_METHOD_NAME, new Object[]{adId});
     }
     
-    public boolean setActive(int adId) throws InvalideRequestException, SKlikException{
+    public boolean setActive(int adId) throws InvalidRequestException, SKlikException{
         return setAttributes(adId, new Attributes(Status.ACTIVE));
     }
     
-    public boolean setSuspend(int adId) throws InvalideRequestException, SKlikException{
+    public boolean setSuspend(int adId) throws InvalidRequestException, SKlikException{
         return setAttributes(adId, new Attributes(Status.SUSPEND));
     }
     
@@ -87,21 +87,21 @@ public class AdDAO {
      * Return existing ad object by id 
      * @param adId - unique sklik ad id
      * @return - ad object
-     * @throws InvalideRequestException
+     * @throws InvalidRequestException
      * @throws SKlikException
      */
-    public Ad getAttributes(Long adId) throws InvalideRequestException, SKlikException{
+    public Ad getAttributes(Long adId) throws InvalidRequestException, SKlikException{
         return transformToObject(client.sendRequest(GET_ATTRIBUTES_METHOD_NAME, new Object[]{adId}));
     }
     
-    public boolean setAttributes(int adId, Attributes attributes) throws InvalideRequestException, SKlikException{
+    public boolean setAttributes(int adId, Attributes attributes) throws InvalidRequestException, SKlikException{
         Map<String, Object> map = new HashMap<>();
         map.put(FIELD_STATUS, attributes.getStatus().getStatusText());
         client.sendRequest(SET_ATTRIBUTES_METHOD_NAME, new Object[]{adId, map});
         return true;
     }
     
-    public boolean setAttributes(int adId, Ad ad) throws InvalideRequestException, SKlikException{
+    public boolean setAttributes(int adId, Ad ad) throws InvalidRequestException, SKlikException{
         Map<String, Object> attributes = transformFromObject(ad);
         client.sendRequest(SET_ATTRIBUTES_METHOD_NAME, new Object[]{adId, attributes});
         return true;
@@ -125,7 +125,7 @@ public class AdDAO {
         return map;
     }
 
-    private Ad transformToObject(Map<String, Object> adResp) throws InvalideRequestException {
+    private Ad transformToObject(Map<String, Object> adResp) throws InvalidRequestException {
         try{
             Ad ad = new Ad();
             if(adResp.get(FIELD_ID) != null) ad.setId((Integer)adResp.get(FIELD_ID));
@@ -143,7 +143,7 @@ public class AdDAO {
 
             return ad; 
         } catch (NumberFormatException ex){
-            throw new InvalideRequestException(ex);
+            throw new InvalidRequestException(ex);
         }
         
     }

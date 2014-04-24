@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.joda.time.DateTime;
 
-import cz.sortivo.sklikapi.exception.InvalideRequestException;
+import cz.sortivo.sklikapi.exception.InvalidRequestException;
 import cz.sortivo.sklikapi.exception.SKlikException;
 import java.util.HashMap;
 
@@ -98,7 +98,7 @@ public class StatsDAO {
      * @param to - date range and
      * @return stat object with filled response values
      */
-    public Stats getStats(SKlikObject  sKlikObject, DateTime from, DateTime to)throws InvalideRequestException, SKlikException{
+    public Stats getStats(SKlikObject  sKlikObject, DateTime from, DateTime to)throws InvalidRequestException, SKlikException{
         return mapStatsObject(getResponse(sKlikObject, from, to), FIELD_STATS);
     }
     
@@ -109,10 +109,10 @@ public class StatsDAO {
      * @param from
      * @param to
      * @return Map from sklikObjectId to stats
-     * @throws InvalideRequestException
+     * @throws InvalidRequestException
      * @throws SKlikException 
      */
-    public Map<Integer, Stats> getMultipleOfStats(Class sKlikObjectClass, Integer[] sKlikObjectsIds, DateTime from, DateTime to)throws InvalideRequestException, SKlikException{
+    public Map<Integer, Stats> getMultipleOfStats(Class sKlikObjectClass, Integer[] sKlikObjectsIds, DateTime from, DateTime to)throws InvalidRequestException, SKlikException{
         Map<Integer, Stats> stats = new HashMap<>();
         Map<String, Object> response = getMultipleResponse(sKlikObjectClass, sKlikObjectsIds, from, to);
         String fieldCollection;
@@ -139,7 +139,7 @@ public class StatsDAO {
      * @param to - date range and
      * @return stat object with filled response values
      */
-    public Stats getContext(SKlikObject  sKlikObject, DateTime from, DateTime to)throws InvalideRequestException, SKlikException{
+    public Stats getContext(SKlikObject  sKlikObject, DateTime from, DateTime to)throws InvalidRequestException, SKlikException{
         return mapStatsObject(getResponse(sKlikObject, from, to), FIELD_CONTEXT);
     }
     
@@ -150,15 +150,15 @@ public class StatsDAO {
      * @param to - date range and
      * @return stat object with filled response values
      */
-    public Stats getFulltext(SKlikObject  sKlikObject, DateTime from, DateTime to)throws InvalideRequestException, SKlikException{
+    public Stats getFulltext(SKlikObject  sKlikObject, DateTime from, DateTime to)throws InvalidRequestException, SKlikException{
         return mapStatsObject(getResponse(sKlikObject, from, to), FIELD_FULLTEXT);
     }
     
-    private Map<String, Object> getMultipleResponse(Class sKlikObjectClass, Integer[] sKlikObjectsIds, DateTime from, DateTime to)throws InvalideRequestException, SKlikException{
+    private Map<String, Object> getMultipleResponse(Class sKlikObjectClass, Integer[] sKlikObjectsIds, DateTime from, DateTime to)throws InvalidRequestException, SKlikException{
        return client.sendRequest(getMultipleMethodNameByClazz(sKlikObjectClass), new Object[]{sKlikObjectsIds, from.toDate(), to.toDate()});
     }
     
-    private Map<String, Object> getResponse(SKlikObject  sKlikObject, DateTime from, DateTime to)throws InvalideRequestException, SKlikException{
+    private Map<String, Object> getResponse(SKlikObject  sKlikObject, DateTime from, DateTime to)throws InvalidRequestException, SKlikException{
        return client.sendRequest(getMethodNameByClazz(sKlikObject), new Object[]{sKlikObject.getId(), from.toDate(), to.toDate()});
     }
     

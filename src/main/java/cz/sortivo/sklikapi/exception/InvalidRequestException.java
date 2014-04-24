@@ -4,19 +4,19 @@ package cz.sortivo.sklikapi.exception;
  * 
  * @author Jan Dufek
  */
-public class InvalideRequestException extends Exception{
+public class InvalidRequestException extends Exception{
 
     private static final long serialVersionUID = 1L;
 
-    public InvalideRequestException(Throwable cause) {
+    public InvalidRequestException(Throwable cause) {
         super(cause);
     }
 
-    public InvalideRequestException(String message, Throwable cause) {
+    public InvalidRequestException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public InvalideRequestException(String message) {
+    public InvalidRequestException(String message) {
         super(message);
     }
     

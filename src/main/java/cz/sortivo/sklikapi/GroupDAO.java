@@ -1,6 +1,6 @@
 package cz.sortivo.sklikapi;
 
-import cz.sortivo.sklikapi.exception.InvalideRequestException;
+import cz.sortivo.sklikapi.exception.InvalidRequestException;
 import cz.sortivo.sklikapi.exception.SKlikException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,7 +39,7 @@ public class GroupDAO {
         this.client = client;
     }
     
-    public List<Group> listGroups(int campaignId) throws InvalideRequestException, SKlikException{
+    public List<Group> listGroups(int campaignId) throws InvalidRequestException, SKlikException{
         Map<String, Object> resp = client.sendRequest(LIST_GROUPS_METHOD_NAME, new Object[]{campaignId});
         List<Group> groups = new ArrayList<>();
         Object[] groupsResp = (Object[]) resp.get("groups");
@@ -55,48 +55,48 @@ public class GroupDAO {
      * @param campaignId
      * @param group
      * @return Id of new Group
-     * @throws InvalideRequestException
+     * @throws InvalidRequestException
      * @throws SKlikException 
      */
-    public Integer create(int campaignId, Group group) throws InvalideRequestException, SKlikException{
+    public Integer create(int campaignId, Group group) throws InvalidRequestException, SKlikException{
         Map<String, Object> resp = client.sendRequest(CREATE_GROUP_METHOD_NAME, new Object[]{campaignId, transformFromObject(group)});
         return (Integer)resp.get("groupId");
     }
     
-    public boolean remove(int groupId) throws InvalideRequestException, SKlikException{
+    public boolean remove(int groupId) throws InvalidRequestException, SKlikException{
         client.sendRequest(REMOVE_GROUP_METHOD_NAME, new Object[]{groupId});
         return true;
     }
     
-    public void restore(int groupId )throws InvalideRequestException, SKlikException{
+    public void restore(int groupId )throws InvalidRequestException, SKlikException{
         client.sendRequest(RESTORE_GROUP_METHOD_NAME, new Object[]{groupId});
     }
     
-    public boolean setActive(int groupId) throws InvalideRequestException, SKlikException{
+    public boolean setActive(int groupId) throws InvalidRequestException, SKlikException{
         return setAttributes(groupId, new Attributes(Status.ACTIVE));
     }
     
-    public boolean setSuspend(int groupId) throws InvalideRequestException, SKlikException{
+    public boolean setSuspend(int groupId) throws InvalidRequestException, SKlikException{
         return setAttributes(groupId, new Attributes(Status.SUSPEND));
     }
     
-    public boolean setKeywordMaxCpc(int groupId, int cpc)throws InvalideRequestException, SKlikException{
+    public boolean setKeywordMaxCpc(int groupId, int cpc)throws InvalidRequestException, SKlikException{
         return setAttributes(groupId, new Attributes(Status.SUSPEND));
     }
     
-    public boolean setAttributes(int groupId, Attributes attributes) throws InvalideRequestException, SKlikException{
+    public boolean setAttributes(int groupId, Attributes attributes) throws InvalidRequestException, SKlikException{
         Map<String, Object> map = new HashMap<>();
         map.put(FIELD_STATUS, attributes.getStatus().getStatusText());
         client.sendRequest(SET_ATTRIBUTES_METHOD_NAME, new Object[]{groupId, map});
         return true;
     }
     
-    public boolean setAttributes(Group group)throws InvalideRequestException, SKlikException{
+    public boolean setAttributes(Group group)throws InvalidRequestException, SKlikException{
         client.sendRequest(SET_ATTRIBUTES_METHOD_NAME, new Object[]{group.getId(), transformFromObject(group)});
         return true;
     }
     
-    public Group getAttributes(int groupId) throws InvalideRequestException, SKlikException{
+    public Group getAttributes(int groupId) throws InvalidRequestException, SKlikException{
         return transformToObject((Map<String, Object>)client.sendRequest(GET_ATTRIBUTES_METHOD_NAME, new Object[]{groupId}).get("group"));
     }
     
@@ -113,7 +113,7 @@ public class GroupDAO {
         return map;
     }
 
-    private Group transformToObject(Map<String, Object> groupRes) throws InvalideRequestException {
+    private Group transformToObject(Map<String, Object> groupRes) throws InvalidRequestException {
         try{
             Group g = new Group();
             if(groupRes.get(FIELD_ID) != null) g.setId((Integer)groupRes.get(FIELD_ID));
@@ -126,7 +126,7 @@ public class GroupDAO {
             if(groupRes.get(FIELD_CREATE_DATE) != null)g.setCreateDate(new DateTime(groupRes.get(FIELD_CREATE_DATE)));
             return g; 
         } catch (NumberFormatException ex){
-            throw new InvalideRequestException(ex);
+            throw new InvalidRequestException(ex);
         }
         
     }
