@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 
 import cz.sortivo.sklikapi.exception.InvalideRequestException;
 import cz.sortivo.sklikapi.exception.SKlikException;
+import java.util.HashMap;
 
 /**
  * 
@@ -16,6 +17,7 @@ public class StatsDAO {
     private static final String GET_CAMPAIGN_STATS_METHOD_NAME = "campaign.stats";
     private static final String GET_GROUP_STATS_METHOD_NAME = "group.stats";
     private static final String GET_KEYWORD_STATS_METHOD_NAME = "keyword.stats";
+    private static final String GET_KEYWORDS_STATS_METHOD_NAME = "keywords.stats";
     private static final String GET_AD_STATS_METHOD_NAME = "ad.stats";
     
     private static final String FIELD_STATS = "stats";
@@ -30,6 +32,9 @@ public class StatsDAO {
     private static final String FIELD_TRANSACTIONS = "transactions";
     private static final String FIELD_VALUE = "value";
     private static final String FIELD_MONEY = "money";
+    
+    private static final String FIELD_KEYWORDS_STATS = "keywordStats";
+    private static final String FIELD_KEYWORDS_STATS_ID = "keywordId";
 
     private Client client;
     
@@ -47,7 +52,7 @@ public class StatsDAO {
      * Map<String, Object> response = client.sendRequest(getMethodNameByClazz( keyword ), new Object[]{})
      * response: keyword.stats
      */
-    private String getMethodNameByClazz( SKlikObject o ){
+    private String getMethodNameByClazz( SKlikObject o){
         
         if (o instanceof Campaign){return GET_CAMPAIGN_STATS_METHOD_NAME;}
         if (o instanceof Group){return GET_GROUP_STATS_METHOD_NAME;}
@@ -56,6 +61,15 @@ public class StatsDAO {
         
         throw new IllegalArgumentException("This type is not suitable for available methods");
     }
+    
+    private String getMultipleMethodNameByClazz( Class object){
+
+        if (object == Keyword.class){
+            return GET_KEYWORDS_STATS_METHOD_NAME;
+        }        
+        throw new IllegalArgumentException("This type is not suitable for available methods");
+    }
+
     
     /**
      * Map response to Stats object
@@ -75,6 +89,7 @@ public class StatsDAO {
         stats.setValue((int)responseData.get(FIELD_VALUE));
         return stats;
     }
+
     
     /**
      * Get statistics object for specified SKlikObject 
@@ -85,6 +100,36 @@ public class StatsDAO {
      */
     public Stats getStats(SKlikObject  sKlikObject, DateTime from, DateTime to)throws InvalideRequestException, SKlikException{
         return mapStatsObject(getResponse(sKlikObject, from, to), FIELD_STATS);
+    }
+    
+    /**
+     * Get multiple statistics
+     * @param sKlikObjectClass
+     * @param sKlikObjectsIds
+     * @param from
+     * @param to
+     * @return Map from sklikObjectId to stats
+     * @throws InvalideRequestException
+     * @throws SKlikException 
+     */
+    public Map<Integer, Stats> getMultipleOfStats(Class sKlikObjectClass, Integer[] sKlikObjectsIds, DateTime from, DateTime to)throws InvalideRequestException, SKlikException{
+        Map<Integer, Stats> stats = new HashMap<>();
+        Map<String, Object> response = getMultipleResponse(sKlikObjectClass, sKlikObjectsIds, from, to);
+        String fieldCollection;
+        String fieldEntityId;
+        if (sKlikObjectClass == Keyword.class){
+            fieldCollection = FIELD_KEYWORDS_STATS;
+            fieldEntityId = FIELD_KEYWORDS_STATS_ID;
+        } else {
+            throw new IllegalArgumentException("This type is not suitable for available methods");
+        }
+        
+        Map<String, Object>[] collection = (Map<String, Object>[]) response.get(fieldCollection);
+        for (Map<String, Object> stat : collection) {
+            Integer id = (Integer) stat.get(fieldEntityId);
+            stats.put(id, mapStatsObject(stat, FIELD_STATS));
+        }
+        return stats;
     }
     
     /**
@@ -109,7 +154,9 @@ public class StatsDAO {
         return mapStatsObject(getResponse(sKlikObject, from, to), FIELD_FULLTEXT);
     }
     
-  
+    private Map<String, Object> getMultipleResponse(Class sKlikObjectClass, Integer[] sKlikObjectsIds, DateTime from, DateTime to)throws InvalideRequestException, SKlikException{
+       return client.sendRequest(getMultipleMethodNameByClazz(sKlikObjectClass), new Object[]{sKlikObjectsIds, from.toDate(), to.toDate()});
+    }
     
     private Map<String, Object> getResponse(SKlikObject  sKlikObject, DateTime from, DateTime to)throws InvalideRequestException, SKlikException{
        return client.sendRequest(getMethodNameByClazz(sKlikObject), new Object[]{sKlikObject.getId(), from.toDate(), to.toDate()});
