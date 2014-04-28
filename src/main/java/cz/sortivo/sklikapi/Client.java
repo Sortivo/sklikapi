@@ -1,6 +1,6 @@
 package cz.sortivo.sklikapi;
 
-import cz.sortivo.sklikapi.exception.InvalideRequestException;
+import cz.sortivo.sklikapi.exception.InvalidRequestException;
 import cz.sortivo.sklikapi.exception.SKlikException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -39,11 +39,11 @@ public class Client {
     
     private XmlRpcClient rpcClient;
     
-    public Client() throws InvalideRequestException{
+    public Client() throws InvalidRequestException{
        this(false);
     }
 
-    public Client(boolean useSandbox) throws InvalideRequestException{
+    public Client(boolean useSandbox) throws InvalidRequestException{
         try {
             this.useSandbox = useSandbox;
             XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
@@ -55,7 +55,7 @@ public class Client {
             rpcClient.setConfig(config);
             rpcClient.setTypeFactory(new XmlRpcTypeNil(rpcClient));
         } catch (MalformedURLException ex) {
-            throw new InvalideRequestException("Malformed URL " + getUrl(), ex);
+            throw new InvalidRequestException("Malformed URL " + getUrl(), ex);
         }
     }
       
@@ -64,23 +64,23 @@ public class Client {
         return SKLIK_URL;
     }
     
-    public Map<String, Object> login(String username, String password) throws InvalideRequestException, SKlikException{
+    public Map<String, Object> login(String username, String password) throws InvalidRequestException, SKlikException{
         Map<String, Object> resp = send(LOGIN_METHOD_NAME, new String[]{username, password});
         session = (String) resp.get("session");
         return resp;
     }
     
-    public Map<String, Object> getAttributes()throws InvalideRequestException, SKlikException{
+    public Map<String, Object> getAttributes()throws InvalidRequestException, SKlikException{
         return sendRequest(CLIENT_ATTRIBUTES_METHOD_NAME, new Object[]{});
     }
     /**
      * 
      * @param addOwnAccount - add own account to the return list
      * @return
-     * @throws InvalideRequestException
+     * @throws InvalidRequestException
      * @throws SKlikException 
      */
-    public List<ForeignAccount> getForeignActiveAccounts(boolean addOwnAccount) throws InvalideRequestException, SKlikException{
+    public List<ForeignAccount> getForeignActiveAccounts(boolean addOwnAccount) throws InvalidRequestException, SKlikException{
         Map<String, Object> attributes = sendRequest(CLIENT_ATTRIBUTES_METHOD_NAME, new Object[]{}); 
         Object[] accounts = (Object[]) attributes.get("foreignAccounts");
         List<ForeignAccount> activeAccounts = new ArrayList<>();
@@ -103,13 +103,13 @@ public class Client {
         return activeAccounts;
     }
     
-    public List<ForeignAccount> getForeignActiveAccounts() throws InvalideRequestException, SKlikException{
+    public List<ForeignAccount> getForeignActiveAccounts() throws InvalidRequestException, SKlikException{
         return getForeignActiveAccounts(false);
     }
     
-    public Map<String, Object> sendRequest(String method, Object[] params) throws InvalideRequestException, SKlikException{
+    public Map<String, Object> sendRequest(String method, Object[] params) throws InvalidRequestException, SKlikException{
         if (session == null){
-            throw new InvalideRequestException("It is necessary to call login method first! (no session available)");            
+            throw new InvalidRequestException("It is necessary to call login method first! (no session available)");            
         }
         if (params.length > 0){
             Object[] paramsFrom = params;
@@ -122,7 +122,7 @@ public class Client {
         return send(method, params);
     }
     
-    protected Map<String, Object> send(String method, Object[] params) throws InvalideRequestException, SKlikException{
+    protected Map<String, Object> send(String method, Object[] params) throws InvalidRequestException, SKlikException{
         try{
             Map<String, Object> response =(HashMap<String, Object>)rpcClient.execute(method, params);
             int status = (Integer) response.get("status");
@@ -132,11 +132,11 @@ public class Client {
             return response;
             
         } catch (XmlRpcException ex){
-            throw new InvalideRequestException("XML-RPC Exception for " + Arrays.toString(params), ex);
+            throw new InvalidRequestException("XML-RPC Exception for " + Arrays.toString(params), ex);
         }
     }
     
-    private ForeignAccount transformToObject(Map<String, Object> foreignAccountResp) throws InvalideRequestException {
+    private ForeignAccount transformToObject(Map<String, Object> foreignAccountResp) throws InvalidRequestException {
         try{
             ForeignAccount account = new ForeignAccount();
             if(foreignAccountResp.get(FIELD_ACCESS) != null) account.setAccess((String)foreignAccountResp.get(FIELD_ACCESS));
@@ -147,7 +147,7 @@ public class Client {
            
             return account; 
         } catch (NumberFormatException ex){
-            throw new InvalideRequestException(ex);
+            throw new InvalidRequestException(ex);
         }
         
     }

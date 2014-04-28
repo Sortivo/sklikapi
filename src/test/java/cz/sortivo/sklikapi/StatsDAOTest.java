@@ -5,7 +5,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
-import cz.sortivo.sklikapi.exception.InvalideRequestException;
+import cz.sortivo.sklikapi.exception.InvalidRequestException;
 import cz.sortivo.sklikapi.exception.SKlikException;
 
 /**
@@ -19,7 +19,7 @@ public class StatsDAOTest {
         Client client = new Client();
         try{
             client.login("USERNAME", "PASSWORD");
-        }catch(InvalideRequestException | SKlikException ex){
+        }catch(InvalidRequestException | SKlikException ex){
             return;
         }
         

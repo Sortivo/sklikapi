@@ -1,6 +1,6 @@
 package cz.sortivo.sklikapi;
 
-import cz.sortivo.sklikapi.exception.InvalideRequestException;
+import cz.sortivo.sklikapi.exception.InvalidRequestException;
 import cz.sortivo.sklikapi.exception.SKlikException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,23 +43,23 @@ public class CampaignDAO {
         this.client = client;
     }
     
-    public List<Campaign> listCampaigns() throws InvalideRequestException, SKlikException{
+    public List<Campaign> listCampaigns() throws InvalidRequestException, SKlikException{
         return listCampaigns(new Object[]{}, false);
     }
     
-    public List<Campaign> listCampaigns(int userId) throws InvalideRequestException, SKlikException{
+    public List<Campaign> listCampaigns(int userId) throws InvalidRequestException, SKlikException{
         return listCampaigns(new Object[]{userId}, false);
     }
     
-    public List<Campaign> listActiveCampaigns() throws InvalideRequestException, SKlikException{
+    public List<Campaign> listActiveCampaigns() throws InvalidRequestException, SKlikException{
         return listCampaigns(new Object[]{}, true);
     }
     
-    public List<Campaign> listActiveCampaigns(int userId) throws InvalideRequestException, SKlikException{
+    public List<Campaign> listActiveCampaigns(int userId) throws InvalidRequestException, SKlikException{
         return listCampaigns(new Object[]{userId}, true);
     }    
     
-    private List<Campaign> listCampaigns(Object[] params, boolean onlyActive) throws InvalideRequestException, SKlikException{
+    private List<Campaign> listCampaigns(Object[] params, boolean onlyActive) throws InvalidRequestException, SKlikException{
         Map<String, Object> response = client.sendRequest(LIST_CAMPAIGNS_METHOD_NAME, params);
         List<Campaign> campaigns = new ArrayList<>();
         Object[] respCampaigns = (Object[]) response.get("campaigns");
@@ -81,10 +81,10 @@ public class CampaignDAO {
      * 
      * @param campaign
      * @return ID of new Campaign
-     * @throws InvalideRequestException
+     * @throws InvalidRequestException
      * @throws SKlikException 
      */
-    public Integer create(Campaign campaign) throws InvalideRequestException, SKlikException{
+    public Integer create(Campaign campaign) throws InvalidRequestException, SKlikException{
         return create(new Object[]{transformFromObject(campaign)});
     }
     /**
@@ -92,19 +92,19 @@ public class CampaignDAO {
      * @param campaign
      * @param userId
      * @return ID of new Campaign
-     * @throws InvalideRequestException
+     * @throws InvalidRequestException
      * @throws SKlikException 
      */
-    public Integer create(Campaign campaign, int userId) throws InvalideRequestException, SKlikException{
+    public Integer create(Campaign campaign, int userId) throws InvalidRequestException, SKlikException{
         return create(new Object[]{transformFromObject(campaign), userId});
     }
     
-    private Integer create(Object[] params) throws InvalideRequestException, SKlikException{
+    private Integer create(Object[] params) throws InvalidRequestException, SKlikException{
         Map<String, Object> resp = client.sendRequest(CREATE_CAMPAIGN_METHOD_NAME, params);
         return (Integer)resp.get("campaignId");
     }
     
-    public boolean remove(int campaignId) throws InvalideRequestException, SKlikException{
+    public boolean remove(int campaignId) throws InvalidRequestException, SKlikException{
         client.sendRequest(REMOVE_CAMPAIGN_METHOD_NAME, new Object[]{campaignId});
         return true;
     }
@@ -126,7 +126,7 @@ public class CampaignDAO {
         return map;
     }
 
-    private Campaign transformToObject(Map<String, Object> campaignResp) throws InvalideRequestException {
+    private Campaign transformToObject(Map<String, Object> campaignResp) throws InvalidRequestException {
         try{
             Campaign campaign = new Campaign();
             if(campaignResp.get(FIELD_ID) != null) campaign.setId((Integer)campaignResp.get(FIELD_ID));
@@ -145,7 +145,7 @@ public class CampaignDAO {
 
             return campaign; 
         } catch (NumberFormatException ex){
-            throw new InvalideRequestException(ex);
+            throw new InvalidRequestException(ex);
         }
         
     }
