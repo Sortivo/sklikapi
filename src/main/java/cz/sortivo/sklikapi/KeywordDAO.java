@@ -1,9 +1,12 @@
 package cz.sortivo.sklikapi;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 
@@ -20,7 +23,7 @@ public class KeywordDAO {
     private static final String REMOVE_KEYWORD_METHOD_NAME = "keyword.remove";
     private static final String RESTORE_KEYWORD_METHOD_NAME = "keyword.restore";
     private static final String SET_ATTRIBUTES_METHOD_NAME = "keyword.setAttributes";
-    
+
     private static final String FIELD_ID = "id";
     private static final String FIELD_NAME = "name";
     private static final String FIELD_MATCH_TYPE = "matchType";
@@ -32,6 +35,11 @@ public class KeywordDAO {
     private static final String FIELD_CREATE_DATE = "createDate";
     private static final String FIELD_GROUP_ID = "groupId";
     private static final String FIELD_MIN_CPC = "minCpc";
+    
+    private static final Set<String> settableAttributes = new HashSet<>();
+    static{
+        settableAttributes.addAll(Arrays.asList(new String[]{FIELD_CPC, FIELD_URL, FIELD_STATUS}));
+    }
     
     private Client client;
     
@@ -188,7 +196,17 @@ public class KeywordDAO {
     }
 
     public void setAttributes(Keyword keyword) throws InvalideRequestException, SKlikException {
-        client.sendRequest(SET_ATTRIBUTES_METHOD_NAME, new Object[]{keyword.getId(), transformFromObject(keyword)});
+        
+        Map<String, Object> attributes = new HashMap<>(); 
+        Map<String, Object> availableAttributes = transformFromObject(keyword);
+        for(String key : availableAttributes.keySet()){
+            if(settableAttributes.contains(key)){
+                attributes.put(key, availableAttributes.get(key));
+            }
+        }
+        
+        
+        client.sendRequest(SET_ATTRIBUTES_METHOD_NAME, new Object[]{keyword.getId(), attributes});
     }
 
 }
