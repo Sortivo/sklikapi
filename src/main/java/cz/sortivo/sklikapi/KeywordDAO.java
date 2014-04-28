@@ -196,7 +196,7 @@ public class KeywordDAO {
     }
 
     public void setAttributes(Keyword keyword) throws InvalidRequestException, SKlikException {
-        
+
         Map<String, Object> attributes = new HashMap<>(); 
         Map<String, Object> availableAttributes = transformFromObject(keyword);
         for(String key : availableAttributes.keySet()){
@@ -207,6 +207,7 @@ public class KeywordDAO {
         
         
         client.sendRequest(SET_ATTRIBUTES_METHOD_NAME, new Object[]{keyword.getId(), attributes});
+
     }
 
 }
