@@ -36,6 +36,8 @@ public class StatsDAO {
     
     private static final String FIELD_KEYWORDS_STATS = "keywordStats";
     private static final String FIELD_KEYWORDS_STATS_ID = "keywordId";
+    
+    private static final int MAX_SKLIK_KEYWORDS_IN_ONE_REQUEST = 100;
 
     private Client client;
     
@@ -118,22 +120,40 @@ public class StatsDAO {
         if (sKlikObjects.isEmpty()){
             return stats;
         }
-        Map<String, Object> response = getMultipleResponse(sKlikObjects, from, to);
-        String fieldCollection;
-        String fieldEntityId;
-        if (sKlikObjects.get(0) instanceof Keyword){
-            fieldCollection = FIELD_KEYWORDS_STATS;
-            fieldEntityId = FIELD_KEYWORDS_STATS_ID;
-        } else {
-            throw new IllegalArgumentException("This type is not suitable for available methods");
+        
+        // count of keywords in one request limit
+        int count = sKlikObjects.size();
+        int start = 0;
+        
+        while (count > 0){
+            int end;
+            if (count > MAX_SKLIK_KEYWORDS_IN_ONE_REQUEST){
+                end = MAX_SKLIK_KEYWORDS_IN_ONE_REQUEST;
+            } else {
+                end = count;
+            }
+            List<? extends SKlikObject> subList = sKlikObjects.subList(start, start + end);
+            count -= end;
+            start += end;
+            
+            Map<String, Object> response = getMultipleResponse(subList, from, to);
+            String fieldCollection;
+            String fieldEntityId;
+            if (subList.get(0) instanceof Keyword){
+                fieldCollection = FIELD_KEYWORDS_STATS;
+                fieldEntityId = FIELD_KEYWORDS_STATS_ID;
+            } else {
+                throw new IllegalArgumentException("This type is not suitable for available methods");
+            }
+
+            Object[] collection = (Object[]) response.get(fieldCollection);
+            for (Object statObj : collection) {
+                Map<String, Object> stat = (Map<String, Object>) statObj;
+                Integer id = (Integer) stat.get(fieldEntityId);
+                stats.put(id, mapStatsObject(stat, FIELD_STATS));
+            }
         }
         
-        Object[] collection = (Object[]) response.get(fieldCollection);
-        for (Object statObj : collection) {
-            Map<String, Object> stat = (Map<String, Object>) statObj;
-            Integer id = (Integer) stat.get(fieldEntityId);
-            stats.put(id, mapStatsObject(stat, FIELD_STATS));
-        }
         return stats;
     }
     
@@ -161,9 +181,9 @@ public class StatsDAO {
     
     private Map<String, Object> getMultipleResponse(List<? extends SKlikObject> sKlikObjects, DateTime from, DateTime to)throws InvalidRequestException, SKlikException{
        Integer[] ids = new Integer[sKlikObjects.size()];
-        for (int i = 0; i < sKlikObjects.size(); i++) {
-            ids[i] = sKlikObjects.get(i).getId();
-        }
+       for (int i = 0; i < sKlikObjects.size(); i++) {
+           ids[i] = sKlikObjects.get(i).getId();
+       }
        return client.sendRequest(getMultipleMethodNameByClazz(sKlikObjects.get(0)), new Object[]{ids, from.toDate(), to.toDate()});
     }
     
