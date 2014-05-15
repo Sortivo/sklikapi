@@ -1,14 +1,15 @@
 package cz.sortivo.sklikapi;
 
-import cz.sortivo.sklikapi.exception.InvalidRequestException;
-import cz.sortivo.sklikapi.exception.SKlikException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import org.joda.time.DateTime;
+
+import cz.sortivo.sklikapi.exception.InvalidRequestException;
+import cz.sortivo.sklikapi.exception.SKlikException;
 
 /**
  * http://api.sklik.cz/listAds.html
