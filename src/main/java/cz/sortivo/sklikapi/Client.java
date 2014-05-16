@@ -21,8 +21,8 @@ import org.joda.time.DateTime;
  */
 public class Client {
     
-    public static final String SKLIK_URL = "https://api.sklik.cz/RPC2/";
-    public static final String SKLIK_SANDBOX_URL = "https://api.sklik.cz/sandbox/RPC2";
+    public static final String SKLIK_URL = "https://api.sklik.cz/bajaja/RPC2/";
+    public static final String SKLIK_SANDBOX_URL = "https://api.sklik.cz/sandbox/bajaja/RPC2/";
     
     private String session;
     private boolean useSandbox;
