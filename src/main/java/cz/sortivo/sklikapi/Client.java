@@ -65,7 +65,7 @@ public class Client {
     }
     
     public Map<String, Object> login(String username, String password) throws InvalidRequestException, SKlikException{
-        Map<String, Object> resp = send(LOGIN_METHOD_NAME, new String[]{username, password});
+        Map<String, Object> resp = send(LOGIN_METHOD_NAME, new String[]{username, password}, false);
         session = (String) resp.get("session");
         return resp;
     }
@@ -123,6 +123,10 @@ public class Client {
     }
     
     protected Map<String, Object> send(String method, Object[] params) throws InvalidRequestException, SKlikException{
+        return send(method, params, true);
+    }
+    
+    protected Map<String, Object> send(String method, Object[] params, boolean logParams) throws InvalidRequestException, SKlikException{
         try{
             Map<String, Object> response =(HashMap<String, Object>)rpcClient.execute(method, params);
             int status = (Integer) response.get("status");
@@ -132,7 +136,12 @@ public class Client {
             return response;
             
         } catch (XmlRpcException ex){
-            throw new InvalidRequestException("XML-RPC Exception for " + Arrays.toString(params), ex);
+            if (logParams){
+                throw new InvalidRequestException("XML-RPC Exception for " + Arrays.toString(params), ex);
+            } else {
+                throw new InvalidRequestException("XML-RPC Exception", ex);
+            }
+            
         }
     }
     
