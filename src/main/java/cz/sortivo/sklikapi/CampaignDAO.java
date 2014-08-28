@@ -2,10 +2,14 @@ package cz.sortivo.sklikapi;
 
 import cz.sortivo.sklikapi.exception.InvalidRequestException;
 import cz.sortivo.sklikapi.exception.SKlikException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import org.joda.time.DateTime;
 
 /**
@@ -16,7 +20,9 @@ public class CampaignDAO {
     
     private static final String LIST_CAMPAIGNS_METHOD_NAME = "listCampaigns";
     private static final String CREATE_CAMPAIGN_METHOD_NAME = "campaign.create";
+    private static final String GET_ATTRIBUTES_METHOD_NAME = "campaign.getAttributes";
     private static final String REMOVE_CAMPAIGN_METHOD_NAME = "campaign.remove";
+    private static final String UPDATE_METHOD_NAME = "campaigns.update";
     
     private static final String ACTIVE_STATUS = "active";
     
@@ -43,70 +49,18 @@ public class CampaignDAO {
         this.client = client;
     }
     
-    public List<Campaign> listCampaigns() throws InvalidRequestException, SKlikException{
-        return listCampaigns(new Object[]{}, false);
-    }
-    
-    public List<Campaign> listCampaigns(int userId) throws InvalidRequestException, SKlikException{
-        return listCampaigns(new Object[]{userId}, false);
-    }
-    
-    public List<Campaign> listActiveCampaigns() throws InvalidRequestException, SKlikException{
-        return listCampaigns(new Object[]{}, true);
-    }
-    
-    public List<Campaign> listActiveCampaigns(int userId) throws InvalidRequestException, SKlikException{
-        return listCampaigns(new Object[]{userId}, true);
-    }    
-    
-    private List<Campaign> listCampaigns(Object[] params, boolean onlyActive) throws InvalidRequestException, SKlikException{
-        Map<String, Object> response = client.sendRequest(LIST_CAMPAIGNS_METHOD_NAME, params);
-        List<Campaign> campaigns = new ArrayList<>();
-        Object[] respCampaigns = (Object[]) response.get("campaigns");
-        
-        for (Object respCampaign : respCampaigns) {
-            Campaign campaign = transformToObject((Map<String, Object>)respCampaign);
-            if (onlyActive) {
-                if (!campaign.isRemoved() && campaign.getStatus().equals(ACTIVE_STATUS)) {
-                    campaigns.add(campaign);
-                }
-            } else {
-                campaigns.add(campaign);
-            }
+
+    public Map<String, Object> pause(List<Campaign> campaigns, Integer userId) throws InvalidRequestException, SKlikException{
+        List<Map<String, Object>> campsList = new LinkedList<>();
+        Map<String, Object> campMap;
+        for (Campaign campaign : campaigns) {
+            campMap = new LinkedHashMap<>();
+            campMap.put("id", campaign.getId());
+            campMap.put("status", "suspend");
+            campsList.add(campMap);
         }
-        return campaigns;
-    }
-    
-    /**
-     * 
-     * @param campaign
-     * @return ID of new Campaign
-     * @throws InvalidRequestException
-     * @throws SKlikException 
-     */
-    public Integer create(Campaign campaign) throws InvalidRequestException, SKlikException{
-        return create(new Object[]{transformFromObject(campaign)});
-    }
-    /**
-     * 
-     * @param campaign
-     * @param userId
-     * @return ID of new Campaign
-     * @throws InvalidRequestException
-     * @throws SKlikException 
-     */
-    public Integer create(Campaign campaign, int userId) throws InvalidRequestException, SKlikException{
-        return create(new Object[]{transformFromObject(campaign), userId});
-    }
-    
-    private Integer create(Object[] params) throws InvalidRequestException, SKlikException{
-        Map<String, Object> resp = client.sendRequest(CREATE_CAMPAIGN_METHOD_NAME, params);
-        return (Integer)resp.get("campaignId");
-    }
-    
-    public boolean remove(int campaignId) throws InvalidRequestException, SKlikException{
-        client.sendRequest(REMOVE_CAMPAIGN_METHOD_NAME, new Object[]{campaignId});
-        return true;
+        
+        return client.sendRequest(UPDATE_METHOD_NAME, new Object[]{campsList}, userId);
     }
     
     private Map<String, Object> transformFromObject(Campaign campaign){

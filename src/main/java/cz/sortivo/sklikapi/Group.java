@@ -15,6 +15,8 @@ public class Group implements SKlikObject {
     private Status status;
     private Integer campaignId;
     private DateTime createDate;
+    private Integer maxUserDailyImpression;
+    private Integer cpm;
 
     public Integer getId() {
         return id;
@@ -82,6 +84,23 @@ public class Group implements SKlikObject {
     public void setCreateDate(DateTime createDate) {
         this.createDate = createDate;
     }
+
+    public Integer getMaxUserDailyImpression() {
+        return maxUserDailyImpression;
+    }
+
+    public void setMaxUserDailyImpression(Integer maxUserDailyImpression) {
+        this.maxUserDailyImpression = maxUserDailyImpression;
+    }
+
+    public Integer getCpm() {
+        return cpm;
+    }
+
+    public void setCpm(Integer cpm) {
+        this.cpm = cpm;
+    }
+    
     
     
     

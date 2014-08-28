@@ -3,6 +3,8 @@ package cz.sortivo.sklikapi;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,11 +19,11 @@ import cz.sortivo.sklikapi.exception.SKlikException;
  */
 public class AdDAO {
     
-    private static final String LIST_ADS_METHOD_NAME = "listAds";
+    private static final String LIST_ADS_METHOD_NAME = "ads.list";
     private static final String CREATE_AD_METHOD_NAME = "ad.create";
     private static final String REMOVE_AD_METHOD_NAME = "ad.remove";
     private static final String RESTORE_AD_METHOD_NAME = "ad.remove";
-    private static final String SET_ATTRIBUTES_METHOD_NAME = "ad.setAttributes";
+    private static final String UPDATE_METHOD_NAME = "ads.update";
     private static final String  GET_ATTRIBUTES_METHOD_NAME = "ad.getAttributes";
     
     private static final String FIELD_ID= "id";
@@ -43,71 +45,65 @@ public class AdDAO {
         this.client = client;
     }
     
-    public List<Ad> listAds(int groupId) throws InvalidRequestException, SKlikException{
-        Map<String, Object> response = client.sendRequest(LIST_ADS_METHOD_NAME, new Object[]{groupId});
-        List<Ad> ads = new ArrayList<>();
-        Object[] adsResp = (Object[]) response.get("ads");
-        
-        for (Object adResp : adsResp) {
-            ads.add(transformToObject((Map<String, Object>)adResp));
-        }
-        return ads;
-    }
-    
-   /**
-    * 
-    * @param groupId
-    * @param ad
-    * @return id of new Ad
-    * @throws InvalidRequestException
-    * @throws SKlikException 
-    */
-    public Integer create(int groupId, Ad ad) throws InvalidRequestException, SKlikException{
-        Map<String, Object> resp = client.sendRequest(CREATE_AD_METHOD_NAME, new Object[]{groupId, transformFromObject(ad)});
-        return (Integer)resp.get("adId");
-    }
-    
-    public boolean remove(int adId) throws InvalidRequestException, SKlikException{
-        client.sendRequest(REMOVE_AD_METHOD_NAME, new Object[]{adId});
-        return true;
-    }
-    
-    public void restore(int adId) throws InvalidRequestException, SKlikException{
-        client.sendRequest(RESTORE_AD_METHOD_NAME, new Object[]{adId});
-    }
-    
-    public boolean setActive(int adId) throws InvalidRequestException, SKlikException{
-        return setAttributes(adId, new Attributes(Status.ACTIVE));
-    }
-    
-    public boolean setSuspend(int adId) throws InvalidRequestException, SKlikException{
-        return setAttributes(adId, new Attributes(Status.SUSPEND));
-    }
     
     /**
-     * Return existing ad object by id 
-     * @param adId - unique sklik ad id
-     * @return - ad object
+     * 
+     * @param ids
+     * @param level
+     * @param includeDeleted
+     * @param userId
+     * @return
      * @throws InvalidRequestException
      * @throws SKlikException
      */
-    public Ad getAttributes(Long adId) throws InvalidRequestException, SKlikException{
-        return transformToObject(client.sendRequest(GET_ATTRIBUTES_METHOD_NAME, new Object[]{adId}));
+    public List<Ad> listAds(List<Integer> ids, EntityType level, boolean includeDeleted, Integer userId) throws InvalidRequestException, SKlikException{
+        
+        Map<String, Object> restrictionFilter = new LinkedHashMap<>();
+        
+        String mapIdsKeyName;
+        switch(level){
+            case CAMPAIGN:
+                mapIdsKeyName = "campaignIds";
+                break;
+            case GROUP:
+                mapIdsKeyName = "groupIds";
+                break;
+            case AD:
+                mapIdsKeyName = "adIds";
+                break;
+            default:
+                throw new IllegalAccessError("Unsupported level " + level);
+          
+        }
+        restrictionFilter.put(mapIdsKeyName, ids);
+        restrictionFilter.put("includeDeleted", includeDeleted);
+        
+        Map<String, Object> response = client.sendRequest(LIST_ADS_METHOD_NAME, new Object[]{restrictionFilter}, userId);
+        
+        List<Ad> ads = new ArrayList<>();
+        for (Object object : (Object[])response.get("ads")) {
+            ads.add(transformToObject((Map<String, Object>) object));
+        }
+        
+        return ads;
+        
     }
     
-    public boolean setAttributes(int adId, Attributes attributes) throws InvalidRequestException, SKlikException{
-        Map<String, Object> map = new HashMap<>();
-        map.put(FIELD_STATUS, attributes.getStatus().getStatusText());
-        client.sendRequest(SET_ATTRIBUTES_METHOD_NAME, new Object[]{adId, map});
-        return true;
+    public Map<String, Object> pause(List<Ad> ads, Integer userId) throws InvalidRequestException, SKlikException{
+        List<Map<String, Object>> adsList = new LinkedList<>();
+        Map<String, Object> adMap;
+        for (Ad ad : ads) {
+            adMap = new LinkedHashMap<>();
+            adMap.put("id", ad.getId());
+            adMap.put("status", "suspend");
+            adsList.add(adMap);
+        }
+        
+        return client.sendRequest(UPDATE_METHOD_NAME, new Object[]{adsList}, userId);
     }
     
-    public boolean setAttributes(int adId, Ad ad) throws InvalidRequestException, SKlikException{
-        Map<String, Object> attributes = transformFromObject(ad);
-        client.sendRequest(SET_ATTRIBUTES_METHOD_NAME, new Object[]{adId, attributes});
-        return true;
-    }
     
+
     private Map<String, Object> transformFromObject(Ad ad){
         Map<String, Object> map = new HashMap<>();
         if (ad.getId() != null)map.put(FIELD_ID, ad.getId());

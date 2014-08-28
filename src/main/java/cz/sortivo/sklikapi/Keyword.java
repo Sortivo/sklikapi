@@ -114,6 +114,13 @@ public class Keyword implements SKlikObject {
     public void setMinCpc(Integer minCpc) {
         this.minCpc = minCpc;
     }
+
+    @Override
+    public String toString() {
+        return "Keyword [id=" + id + ", name=" + name + ", matchType=" + matchType + ", removed=" + removed
+                + ", status=" + status + ", disabled=" + disabled + ", cpc=" + cpc + ", url=" + url + ", createDate="
+                + createDate + ", groupId=" + groupId + ", minCpc=" + minCpc + "]";
+    }
     
     
 }
