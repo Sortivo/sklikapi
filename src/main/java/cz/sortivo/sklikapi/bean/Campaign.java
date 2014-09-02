@@ -2,9 +2,11 @@
  * Author - Jan Dufek, dufeja@gmail.com
  * Copying and using only with permission of the author.
  */
-package cz.sortivo.sklikapi;
+package cz.sortivo.sklikapi.bean;
 
 import org.joda.time.DateTime;
+
+import cz.sortivo.sklikapi.SKlikObject;
 
 /**
  *
@@ -75,7 +77,7 @@ public class Campaign implements SKlikObject {
         return exhaustedDayBudget;
     }
 
-    protected void setExhaustedDayBudget(Integer exhaustedDayBudget) {
+    public void setExhaustedDayBudget(Integer exhaustedDayBudget) {
         this.exhaustedDayBudget = exhaustedDayBudget;
     }
 
@@ -107,7 +109,7 @@ public class Campaign implements SKlikObject {
         return exhaustedTotalBudget;
     }
 
-    protected void setExhaustedTotalBudget(Integer exhaustedTotalBudget) {
+    public void setExhaustedTotalBudget(Integer exhaustedTotalBudget) {
         this.exhaustedTotalBudget = exhaustedTotalBudget;
     }
 
@@ -123,7 +125,7 @@ public class Campaign implements SKlikObject {
         return exhaustedTotalClicks;
     }
 
-    protected void setExhaustedTotalClicks(Integer exhaustedTotalClicks) {
+    public void setExhaustedTotalClicks(Integer exhaustedTotalClicks) {
         this.exhaustedTotalClicks = exhaustedTotalClicks;
     }
 
@@ -139,11 +141,11 @@ public class Campaign implements SKlikObject {
 
    
 
-    protected DateTime getStartDate() {
+    public DateTime getStartDate() {
         return startDate;
     }
 
-    protected DateTime getEndDate() {
+    public DateTime getEndDate() {
         return endDate;
     }
 

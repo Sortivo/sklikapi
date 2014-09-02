@@ -1,5 +1,6 @@
 package cz.sortivo.sklikapi;
 
+import cz.sortivo.sklikapi.bean.Campaign;
 import cz.sortivo.sklikapi.exception.InvalidRequestException;
 import cz.sortivo.sklikapi.exception.SKlikException;
 
@@ -50,7 +51,7 @@ public class CampaignDAO {
     }
     
 
-    public Map<String, Object> pause(List<Campaign> campaigns, Integer userId) throws InvalidRequestException, SKlikException{
+    public Map<String, Object> pause(List<Campaign> campaigns) throws InvalidRequestException, SKlikException{
         List<Map<String, Object>> campsList = new LinkedList<>();
         Map<String, Object> campMap;
         for (Campaign campaign : campaigns) {
@@ -60,7 +61,7 @@ public class CampaignDAO {
             campsList.add(campMap);
         }
         
-        return client.sendRequest(UPDATE_METHOD_NAME, new Object[]{campsList}, userId);
+        return client.sendRequest(UPDATE_METHOD_NAME, new Object[]{campsList});
     }
     
     private Map<String, Object> transformFromObject(Campaign campaign){

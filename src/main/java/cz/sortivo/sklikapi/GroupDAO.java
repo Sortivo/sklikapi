@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.joda.time.DateTime;
 
+import cz.sortivo.sklikapi.bean.Group;
 import cz.sortivo.sklikapi.exception.InvalidRequestException;
 import cz.sortivo.sklikapi.exception.SKlikException;
 
@@ -45,14 +46,14 @@ public class GroupDAO {
     
 
     @SuppressWarnings("unchecked")
-    public List<Group> listGroups(List<Integer> campaignIds, boolean includeDeleted, Integer userId) throws InvalidRequestException, SKlikException{
+    public List<Group> listGroups(List<Integer> campaignIds, boolean includeDeleted) throws InvalidRequestException, SKlikException{
 
         
         Map<String, Object> restrictionFilter = new LinkedHashMap<>();
         restrictionFilter.put("includeDeleted", includeDeleted);
         restrictionFilter.put("campaignIds", campaignIds);
         
-        Map<String, Object> response = client.sendRequest(LIST_GROUPS_METHOD_NAME, new Object[]{restrictionFilter}, userId);
+        Map<String, Object> response = client.sendRequest(LIST_GROUPS_METHOD_NAME, new Object[]{restrictionFilter});
         
         List<Group> groups = new ArrayList<>();
         for (Object object : (Object[])response.get("groups")) {
@@ -72,14 +73,14 @@ public class GroupDAO {
      * @throws InvalidRequestException
      * @throws SKlikException
      */
-    public Map<String, Object> update(List<Group> groups, Integer userId) throws InvalidRequestException, SKlikException{
+    public Map<String, Object> update(List<Group> groups) throws InvalidRequestException, SKlikException{
         
         List<Map<String, Object>> groupsList = new LinkedList<>();
         for (Group group : groups) {
             groupsList.add(transformFromObject(group));
         }
         
-        return client.sendRequest(UPDATE_METHOD_NAME, new Object[]{groupsList.toArray()}, userId);
+        return client.sendRequest(UPDATE_METHOD_NAME, new Object[]{groupsList.toArray()});
         
     }
     
@@ -91,17 +92,17 @@ public class GroupDAO {
      * @throws InvalidRequestException
      * @throws SKlikException
      */
-    public Map<String, Object> pause(List<Group> groups, Integer userId) throws InvalidRequestException, SKlikException{
+    public Map<String, Object> pause(List<Group> groups) throws InvalidRequestException, SKlikException{
         List<Map<String, Object>> groupsList = new LinkedList<>();
         Map<String, Object> groupMap;
         for (Group group : groups) {
             groupMap = new LinkedHashMap<>();
-            groupMap.put("id", group.getId());
-            groupMap.put("status", "suspend");
+            groupMap.put(FIELD_ID, group.getId());
+            groupMap.put(FIELD_STATUS, Status.SUSPEND.getStatusText());
             groupsList.add(groupMap);
         }
         
-        return client.sendRequest(UPDATE_METHOD_NAME, new Object[]{groupsList.toArray()}, userId);
+        return client.sendRequest(UPDATE_METHOD_NAME, new Object[]{groupsList.toArray()});
     }
     
     

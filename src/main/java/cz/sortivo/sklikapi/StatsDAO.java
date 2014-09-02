@@ -4,8 +4,13 @@ import java.util.Map;
 
 import org.joda.time.DateTime;
 
+import cz.sortivo.sklikapi.bean.Ad;
+import cz.sortivo.sklikapi.bean.Campaign;
+import cz.sortivo.sklikapi.bean.Group;
+import cz.sortivo.sklikapi.bean.Keyword;
 import cz.sortivo.sklikapi.exception.InvalidRequestException;
 import cz.sortivo.sklikapi.exception.SKlikException;
+
 import java.util.HashMap;
 import java.util.List;
 

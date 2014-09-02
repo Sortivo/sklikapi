@@ -2,9 +2,13 @@
  * Author - Jan Dufek, dufeja@gmail.com
  * Copying and using only with permission of the author.
  */
-package cz.sortivo.sklikapi;
+package cz.sortivo.sklikapi.bean;
 
 import org.joda.time.DateTime;
+
+import cz.sortivo.sklikapi.MatchType;
+import cz.sortivo.sklikapi.SKlikObject;
+import cz.sortivo.sklikapi.Status;
 
 /**
  *
@@ -15,7 +19,7 @@ public class Keyword implements SKlikObject {
     private Integer id;
     private String name;
     private MatchType matchType;
-    private boolean removed;
+    private boolean deleted;
     private Status status;
     private boolean disabled;
     private Integer cpc;
@@ -49,11 +53,11 @@ public class Keyword implements SKlikObject {
     }
 
     public boolean isRemoved() {
-        return removed;
+        return deleted;
     }
 
     public void setRemoved(boolean removed) {
-        this.removed = removed;
+        this.deleted = removed;
     }
 
     public Status getStatus() {
@@ -117,7 +121,7 @@ public class Keyword implements SKlikObject {
 
     @Override
     public String toString() {
-        return "Keyword [id=" + id + ", name=" + name + ", matchType=" + matchType + ", removed=" + removed
+        return "Keyword [id=" + id + ", name=" + name + ", matchType=" + matchType + ", removed=" + deleted
                 + ", status=" + status + ", disabled=" + disabled + ", cpc=" + cpc + ", url=" + url + ", createDate="
                 + createDate + ", groupId=" + groupId + ", minCpc=" + minCpc + "]";
     }

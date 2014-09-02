@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.joda.time.DateTime;
 
+import cz.sortivo.sklikapi.bean.Keyword;
 import cz.sortivo.sklikapi.exception.InvalidRequestException;
 import cz.sortivo.sklikapi.exception.SKlikException;
 
@@ -26,7 +27,7 @@ public class KeywordDAO {
     private static final String FIELD_ID = "id";
     private static final String FIELD_NAME = "name";
     private static final String FIELD_MATCH_TYPE = "matchType";
-    private static final String FIELD_REMOVED = "removed";
+    private static final String FIELD_REMOVED = "deleted";
     private static final String FIELD_STATUS = "status";
     private static final String FIELD_DISABLED = "disabled";
     private static final String FIELD_CPC = "cpc";
@@ -48,12 +49,12 @@ public class KeywordDAO {
     
 
 
-    public List<Keyword> listKeywords(List<Integer> groupIds, boolean includeDeleted, Integer userId) throws InvalidRequestException, SKlikException {
+    public List<Keyword> listKeywords(List<Integer> groupIds, boolean includeDeleted) throws InvalidRequestException, SKlikException {
         List<Keyword> keywords = new ArrayList<>();
         
         if(groupIds.size() > 100){
-            keywords.addAll(listKeywords(groupIds.subList(0, groupIds.size()/2), includeDeleted, userId));
-            keywords.addAll(listKeywords(groupIds.subList(groupIds.size()/2, groupIds.size()), includeDeleted, userId));
+            keywords.addAll(listKeywords(groupIds.subList(0, groupIds.size()/2), includeDeleted));
+            keywords.addAll(listKeywords(groupIds.subList(groupIds.size()/2, groupIds.size()), includeDeleted));
             return keywords;
         }
         
@@ -62,7 +63,7 @@ public class KeywordDAO {
         restrictionFilter.put("groupIds", groupIds);
         restrictionFilter.put("includeDeleted", includeDeleted);
 
-        Map<String, Object> response = client.sendRequest(LIST_KEYWORDS_METHOD_NAME, new Object[]{restrictionFilter}, userId);
+        Map<String, Object> response = client.sendRequest(LIST_KEYWORDS_METHOD_NAME, new Object[]{restrictionFilter});
         
         
         for (Object object : (Object[])response.get("keywords")) {
@@ -72,7 +73,7 @@ public class KeywordDAO {
         return keywords;
     }
     
-    public Map<String, Object> pause(List<Keyword> keywodrs, Integer userId) throws InvalidRequestException, SKlikException{
+    public Map<String, Object> pause(List<Keyword> keywodrs) throws InvalidRequestException, SKlikException{
         List<Map<String, Object>> kwsList = new LinkedList<>();
         Map<String, Object> kwMap;
         for (Keyword keyword : keywodrs) {
@@ -82,12 +83,12 @@ public class KeywordDAO {
                 continue;
             }
             
-            kwMap.put("id", keyword.getId());
-            kwMap.put("status", "suspend");
+            kwMap.put(FIELD_ID, keyword.getId());
+            kwMap.put(FIELD_STATUS, Status.SUSPEND.getStatusText());
             kwsList.add(kwMap);
         }
 
-        return client.sendRequest(UPDATE_METHOD_NAME, new Object[]{kwsList}, userId);
+        return client.sendRequest(UPDATE_METHOD_NAME, new Object[]{kwsList});
     }
         
   

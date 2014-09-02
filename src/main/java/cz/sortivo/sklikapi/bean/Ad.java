@@ -2,11 +2,14 @@
  * Author - Jan Dufek, dufeja@gmail.com
  * Copying and using only with permission of the author.
  */
-package cz.sortivo.sklikapi;
+package cz.sortivo.sklikapi.bean;
 
 import java.util.List;
 
 import org.joda.time.DateTime;
+
+import cz.sortivo.sklikapi.SKlikObject;
+import cz.sortivo.sklikapi.Status;
 
 /**
  *
@@ -21,7 +24,7 @@ public class Ad  implements SKlikObject{
     private String creative3;
     private String clickthruText;
     private String clickthruUrl;
-    private boolean removed;
+    private boolean deleted;
     private Status status;
     private DateTime createDate;
     private Integer groupId;
@@ -110,12 +113,14 @@ public class Ad  implements SKlikObject{
         this.clickthruUrl = clickthruUrl;
     }
 
-    public boolean isRemoved() {
-        return removed;
+
+
+    public boolean isDeleted() {
+        return deleted;
     }
 
-    public void setRemoved(boolean removed) {
-        this.removed = removed;
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     public Status getStatus() {
@@ -152,7 +157,7 @@ public class Ad  implements SKlikObject{
         return "Ad [id=" + id + ", creative1=" + creative1 + ", creative2="
                 + creative2 + ", creative3=" + creative3 + ", clickthruText="
                 + clickthruText + ", clickthruUrl=" + clickthruUrl
-                + ", removed=" + removed + ", status=" + status
+                + ", deleted=" + deleted + ", status=" + status
                 + ", createDate=" + createDate + ", groupId=" + groupId
                 + ", premiseMode=" + premiseMode + ", premiseId=" + premiseId
                 + "]";

@@ -31,6 +31,7 @@ public class Client {
     public static final String SKLIK_SANDBOX_URL = "https://api.sklik.cz/sandbox/cipisek/RPC2/";
 
     private String session;
+    private Integer userId;
     private boolean useSandbox;
 
     private static final String LOGIN_METHOD_NAME = "client.login";
@@ -45,9 +46,21 @@ public class Client {
 
     private XmlRpcClient rpcClient;
 
+    
     public Client() throws InvalidRequestException {
         this(false);
     }
+    
+   
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+
 
     public Client(boolean useSandbox) throws InvalidRequestException {
         try {
@@ -74,7 +87,7 @@ public class Client {
     
     
     public Map<String, Object> getApiLimits() throws InvalidRequestException, SKlikException{
-        return sendRequest(API_LIMITS_METHOD_NAME, null, null);
+        return sendRequest(API_LIMITS_METHOD_NAME, null);
     }
 
     /**
@@ -108,7 +121,7 @@ public class Client {
      * @throws InvalidRequestException
      * @throws SKlikException
      */
-    public Map<String, Object> sendRequest(String method, Object[] params, Integer userId)
+    public Map<String, Object> sendRequest(String method, Object[] params)
             throws InvalidRequestException, SKlikException {
         if (session == null) {
             throw new InvalidRequestException("It is necessary to call login method first! (no session available)");

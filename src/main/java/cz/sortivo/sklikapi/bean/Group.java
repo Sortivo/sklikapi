@@ -1,6 +1,9 @@
-package cz.sortivo.sklikapi;
+package cz.sortivo.sklikapi.bean;
 
 import org.joda.time.DateTime;
+
+import cz.sortivo.sklikapi.SKlikObject;
+import cz.sortivo.sklikapi.Status;
 /**
  *
  * @author Jan Dufek
@@ -73,7 +76,7 @@ public class Group implements SKlikObject {
         return campaignId;
     }
 
-    protected void setCampaignId(Integer campaignId) {
+    public void setCampaignId(Integer campaignId) {
         this.campaignId = campaignId;
     }
 

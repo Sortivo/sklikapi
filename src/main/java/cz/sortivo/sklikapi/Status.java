@@ -10,7 +10,8 @@ package cz.sortivo.sklikapi;
  */
 public enum Status {
     ACTIVE("active"),
-    SUSPEND("suspend");
+    SUSPEND("suspend"),
+    NOACTIVE("noactive");
     
     private Status(String statusText){
         this.statusText = statusText;
@@ -27,6 +28,9 @@ public enum Status {
             return Status.ACTIVE;
         } 
         if (statusText.equalsIgnoreCase("suspend")){
+            return Status.SUSPEND;
+        } 
+        if (statusText.equalsIgnoreCase("noactive")){
             return Status.SUSPEND;
         } 
 
