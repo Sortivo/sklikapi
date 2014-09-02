@@ -28,6 +28,12 @@ public class AdResponse {
     public void setDiagnostics(List<Diagnostic> diagnostics) {
         this.diagnostics = diagnostics;
     }
+
+    @Override
+    public String toString() {
+        return "AdResponse [ad=" + ad + ", diagnostics=" + diagnostics + "]";
+    }
+    
     
     
    

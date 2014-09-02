@@ -41,5 +41,12 @@ public class Diagnostic {
     public Map<String, Object> getDiagnosticResponse() {
         return diagnosticResponse;
     }
+
+    @Override
+    public String toString() {
+        return "Diagnostic [name=" + name + ", requestId=" + requestId + ", type=" + type + ", diagnosticResponse="
+                + diagnosticResponse + "]";
+    }
   
+    
 }

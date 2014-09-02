@@ -5,15 +5,15 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import cz.sortivo.sklikapi.bean.Diagnostic;
 import cz.sortivo.sklikapi.exception.InvalidRequestException;
 import cz.sortivo.sklikapi.exception.SKlikException;
 
@@ -26,7 +26,7 @@ import cz.sortivo.sklikapi.exception.SKlikException;
  */
 public class Client {
 
-   // Logger logger = LoggerFactory.getLogger(Client.class);
+    Logger logger = LoggerFactory.getLogger(Client.class);
 
     public static final String SKLIK_URL = "https://api.sklik.cz/cipisek/RPC2/";
     public static final String SKLIK_SANDBOX_URL = "https://api.sklik.cz/sandbox/cipisek/RPC2/";
@@ -44,6 +44,9 @@ public class Client {
     private static final String FIELD_ACCESS = "access";
     private static final String FIELD_RELATION_NAME = "relationName";
     private static final String FIELD_RELATION_STATUS = "relationStatus";
+    
+    //defines how long the thread has to wait when TooManyRequests error occurs
+    private static final int SLEEP_ON_TOO_MANY_REQUESTS = 1000; 
 
 
     private XmlRpcClient rpcClient;
@@ -169,19 +172,18 @@ public class Client {
      */
     protected Map<String, Object> send(String method, Object[] params, boolean logParams) throws InvalidRequestException, SKlikException {
         try {
+            logger.debug("Requesting API method " + method + " usig params " + params);
+            
             Map<String, Object> response = (HashMap<String, Object>) rpcClient.execute(method, params);
             
 
             int status = (Integer) response.get("status");
             if (status == 415) {
-              //  logger.info("Too many requests exception detected. Waiting 1 second.");
-                // too many requests exception detected, wait 1 second and try
-                // again
                 try {
-                    System.out.println("sleeping");
-                    Thread.sleep(5000);
+                    logger.debug("Too many requests error detected sleeping " + SLEEP_ON_TOO_MANY_REQUESTS + " ms");
+                    Thread.sleep(SLEEP_ON_TOO_MANY_REQUESTS);
                 } catch (InterruptedException e) {     
-              //      logger.error("Unable to proceed sleep, thread interrupted", e);
+                    logger.error("Unable to proceed sleep, thread interrupted", e);
                 }
                 return send(method, params, logParams);
             } else if (status >= 400) {

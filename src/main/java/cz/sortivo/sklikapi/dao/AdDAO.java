@@ -41,9 +41,6 @@ public class AdDAO {
     private static final String UPDATE_METHOD_NAME = "ads.update";
     private static final String CREATE_METHOD_NAME = "ads.create";
 
-    private static final String DELETE_METHOD_NAME = "ads.remove";
-    private static final String RESORE_METHOD_NAME = "ads.restore";
-
     private static final int LIMIT_ADS_TO_CREATE = 100;
     private static final int LIMIT_ADS_TO_UPDATE = 100;
 
@@ -67,8 +64,7 @@ public class AdDAO {
             FIELD_CLICKTHRU_URL, FIELD_STATUS, FIELD_PREMISE_MODE, FIELD_PREMISE_ID }));
 
     private static final Set<String> UPDATE_METHOD_ALLOWED_FIELDS = new HashSet<>(Arrays.asList(new String[] {
-            FIELD_ID, FIELD_CREATIVE_1, FIELD_CREATIVE_2, FIELD_CREATIVE_3, FIELD_CLICKTHRU_TEXT, FIELD_CLICKTHRU_URL,
-            FIELD_STATUS, FIELD_PREMISE_MODE, FIELD_PREMISE_ID }));
+            FIELD_ID, FIELD_CLICKTHRU_URL, FIELD_STATUS, FIELD_PREMISE_MODE, FIELD_PREMISE_ID }));
 
     private Client client;
 
@@ -167,7 +163,7 @@ public class AdDAO {
 
         if (ads.size() > LIMIT_ADS_TO_CREATE) {
             throw new IllegalArgumentException(
-                    "Count of ads to create over exceeds allowed API limit, see api.limits for current details");
+                    "Count of ads to create exceeds allowed API limit, see api.limits for current details");
         }
 
         return save(ads, CREATE_METHOD_ALLOWED_FIELDS, CREATE_METHOD_NAME);
@@ -200,17 +196,37 @@ public class AdDAO {
             throw new IllegalArgumentException("Ads cannot be null");
         }
 
-        if (ads.size() > LIMIT_ADS_TO_CREATE) {
+        if (ads.size() > LIMIT_ADS_TO_UPDATE) {
             throw new IllegalArgumentException(
-                    "Count of ads to create over exceeds allowed API limit, see api.limits for current details");
+                    "Count of ads to update exceeds allowed API limit, see api.limits for current details");
         }
 
         return save(ads, UPDATE_METHOD_ALLOWED_FIELDS, UPDATE_METHOD_NAME);
 
     }
 
-    
-    
+    /**
+     * Proceed specified operation (usually create/update) on specified list of
+     * ads
+     * 
+     * @param ads
+     * @param ALLOWED_FIELDS
+     *            - fields that can be send via API
+     * @param METHOD_NAME
+     *            - specifies method that will be called
+     * @return AdResponse object, may contain ad diagnostics if it was not
+     *         processed correctly but was written to SKlik. Also may contain ad
+     *         objects with updated id;
+     * @throws InvalidRequestException
+     *             if request or response is syntacticly incorrect for
+     *             processing with XMLRPC client
+     * @throws AdCreationException
+     *             - May be thrown if some of ads contains fatal error due to
+     *             the whole transaction is rollbacked. Contains additional
+     *             information with error cause and list of ads that caused
+     *             errors.
+     * @throws SKlikException
+     */
     protected List<AdResponse> save(List<Ad> ads, final Set<String> ALLOWED_FIELDS, final String METHOD_NAME)
             throws InvalidRequestException, AdCreationException, SKlikException {
         List<Map<String, Object>> adMaps = new ArrayList<>();
@@ -350,11 +366,21 @@ public class AdDAO {
 
     }
 
+    /**
+     * 
+     * @Deprecated No longer supported. Use listAds(List<Integer>, EntityType, boolean) instead 
+     */
+    @Deprecated()
     public List<Ad> listAds(int intValue) throws InvalidRequestException, SKlikException {
         // TODO Auto-generated method stub
         return null;
     }
 
+    /**
+     * 
+     * @Deprecated No longer supported. Use update(List<Ad>) instead
+     */
+    @Deprecated()
     public void setAttributes(Integer id, Ad ad) throws InvalidRequestException, SKlikException {
         // TODO Auto-generated method stub
 
