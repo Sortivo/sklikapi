@@ -200,4 +200,11 @@ public class KeywordDAO {
 
 
 
+    public void setAttributes(Integer id, Attributes attributes)throws InvalidRequestException, SKlikException {
+        // TODO Auto-generated method stub
+        
+    }
+
+
+
 }
