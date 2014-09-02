@@ -5,14 +5,15 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import cz.sortivo.sklikapi.bean.Diagnostic;
 import cz.sortivo.sklikapi.exception.InvalidRequestException;
 import cz.sortivo.sklikapi.exception.SKlikException;
 
@@ -43,6 +44,7 @@ public class Client {
     private static final String FIELD_ACCESS = "access";
     private static final String FIELD_RELATION_NAME = "relationName";
     private static final String FIELD_RELATION_STATUS = "relationStatus";
+
 
     private XmlRpcClient rpcClient;
 
@@ -195,7 +197,7 @@ public class Client {
             throw new InvalidRequestException("XML-RPC Exception", ex);
         }
     }
-
+  
     private ForeignAccount transformToObject(Map<String, Object> foreignAccountResp) throws InvalidRequestException {
         try {
             ForeignAccount account = new ForeignAccount();

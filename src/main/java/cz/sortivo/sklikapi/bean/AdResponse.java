@@ -1,12 +1,34 @@
 package cz.sortivo.sklikapi.bean;
 
+import java.util.List;
 
-public class AdResponse extends Response {
+
+public class AdResponse {
     Ad ad;
+    List<Diagnostic> diagnostics;
     
+    public AdResponse(){
+
+    }
     
-    AdResponse(int status, String statusMessage, Ad ad){
-        super(status, statusMessage);
+    public AdResponse(Ad ad, List<Diagnostic> diagnostics) {
+        super();
+        this.ad = ad;
+        this.diagnostics = diagnostics;
+    }
+    public Ad getAd() {
+        return ad;
+    }
+    public void setAd(Ad ad) {
         this.ad = ad;
     }
+    public List<Diagnostic> getDiagnostics() {
+        return diagnostics;
+    }
+    public void setDiagnostics(List<Diagnostic> diagnostics) {
+        this.diagnostics = diagnostics;
+    }
+    
+    
+   
 }

@@ -15,10 +15,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.sortivo.sklikapi.Client;
+import cz.sortivo.sklikapi.ResponseUtils;
 import cz.sortivo.sklikapi.EntityType;
 import cz.sortivo.sklikapi.Status;
 import cz.sortivo.sklikapi.bean.Ad;
 import cz.sortivo.sklikapi.bean.AdResponse;
+import cz.sortivo.sklikapi.bean.Diagnostic;
+import cz.sortivo.sklikapi.exception.AdCreationException;
 import cz.sortivo.sklikapi.exception.InvalidRequestException;
 import cz.sortivo.sklikapi.exception.SKlikException;
 
@@ -57,8 +60,14 @@ public class AdDAO {
     private static final String FIELD_PREMISE_MODE = "premiseMode";
     private static final String FIELD_PREMISE_ID = "premiseId";
 
+    private static final String FIELD_REQUEST_ID = "requestId";
+
     private static final Set<String> CREATE_METHOD_ALLOWED_FIELDS = new HashSet<>(Arrays.asList(new String[] {
             FIELD_GROUP_ID, FIELD_CREATIVE_1, FIELD_CREATIVE_2, FIELD_CREATIVE_3, FIELD_CLICKTHRU_TEXT,
+            FIELD_CLICKTHRU_URL, FIELD_STATUS, FIELD_PREMISE_MODE, FIELD_PREMISE_ID }));
+    
+    private static final Set<String> UPDATE_METHOD_ALLOWED_FIELDS = new HashSet<>(Arrays.asList(new String[] {
+            FIELD_ID, FIELD_CREATIVE_1, FIELD_CREATIVE_2, FIELD_CREATIVE_3, FIELD_CLICKTHRU_TEXT,
             FIELD_CLICKTHRU_URL, FIELD_STATUS, FIELD_PREMISE_MODE, FIELD_PREMISE_ID }));
 
     private Client client;
@@ -93,7 +102,7 @@ public class AdDAO {
         Map<String, Object> restrictionFilter = new LinkedHashMap<>();
 
         String mapIdsKeyName;
-        
+
         logger.debug("Level set to " + level);
         switch (level) {
         case CAMPAIGN:
@@ -114,7 +123,6 @@ public class AdDAO {
 
         Map<String, Object> response = client.sendRequest(LIST_ADS_METHOD_NAME, new Object[] { restrictionFilter });
 
-        
         List<Ad> ads = new ArrayList<>();
         for (Object object : (Object[]) response.get("ads")) {
             ads.add(transformToObject((Map<String, Object>) object));
@@ -125,13 +133,28 @@ public class AdDAO {
     }
 
     /**
-     * Performs creation of specified ads. 
-     * @param ads 
-     * @return List of AdResponses
+     * Performs creation of specified ads. API method is transactional. Id some
+     * of specified ads contain errors, none of others will be proceeded.
+     * 
+     * @param ads
+     * @return AdResponse object, may contain ad diagnostics if it was not
+     *         processed correctly but was written to SKlik. Also contains ad
+     *         object with updated id;
      * @throws InvalidRequestException
+     *             if request or response is syntacticly incorrect for
+     *             processing with XMLRPC client
+     * @throws AdCreationException
+     *             - May be thrown if some of ads contains fatal error due to
+     *             the whole transaction is rollbacked. Contains additional
+     *             information with error cause and list of ads that caused
+     *             errors.
      * @throws SKlikException
      */
-    public List<AdResponse> create(List<Ad> ads) throws InvalidRequestException, SKlikException {
+    public List<AdResponse> create(List<Ad> ads) throws InvalidRequestException, AdCreationException, SKlikException {
+
+        if (ads == null) {
+            throw new IllegalArgumentException("Ads cannot be null");
+        }
 
         if (ads.size() > LIMIT_ADS_TO_CREATE) {
             throw new IllegalArgumentException(
@@ -140,13 +163,30 @@ public class AdDAO {
 
         List<Map<String, Object>> adMaps = new ArrayList<>();
 
+        Map<String, Object> adMap;
         for (Ad ad : ads) {
-            adMaps.add(transformFromObject(ad, CREATE_METHOD_ALLOWED_FIELDS));
+            adMap = transformFromObject(ad, CREATE_METHOD_ALLOWED_FIELDS);
+            adMap.put(FIELD_REQUEST_ID, ad.hashCode());
+            adMaps.add(adMap);
         }
 
-        Map<String, Object> response = client.sendRequest(CREATE_METHOD_NAME, new Object[] { adMaps });
+        Map<String, Object> response;
+        List<AdResponse> adResponses;
+        ;
+        try {
+            response = client.sendRequest(CREATE_METHOD_NAME, new Object[] { adMaps });
+            adResponses = ResponseUtils.buildsAdResponses(ads, response, false);
+        } catch (SKlikException e) {
+            // try to find some diagnostics
+            if (e.getStatus() == 400 || e.getStatus() == 406) {
+                adResponses = ResponseUtils.buildsAdResponses(ads, e.getResponse(), true);
+                throw new AdCreationException("Could not create " + ads.size()
+                        + " ads! Requested batch contains errors.", adResponses, e);
+            }
+            throw e;
+        }
 
-        return null;
+        return adResponses;
 
     }
 

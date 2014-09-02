@@ -13,12 +13,15 @@ public class SKlikException extends Exception{
 
     private final int status;
     private final Map<String, Object> response;
+
  
     public SKlikException(String message, int status, Map<String, Object> response) {
         super(message);
         this.status = status;
         this.response = response;
     }
+
+ 
 
     public int getStatus() {
         return status;
