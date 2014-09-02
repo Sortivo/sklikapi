@@ -219,4 +219,22 @@ public class Client {
 
     }
 
+
+    public void getAttributes() throws InvalidRequestException, SKlikException{
+        // TODO Auto-generated method stub
+        
+    }
+
+
+    public void getForeignActiveAccounts() throws InvalidRequestException, SKlikException{
+        // TODO Auto-generated method stub
+        
+    }
+
+
+    public List<ForeignAccount> getForeignActiveAccounts(boolean b)throws InvalidRequestException, SKlikException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

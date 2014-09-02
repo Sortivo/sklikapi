@@ -179,4 +179,25 @@ public class KeywordDAO {
 
 
 
+    public List<Keyword> listKeywords(int intValue) throws InvalidRequestException, SKlikException{
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+
+    public void setAttributes(Keyword kw) throws InvalidRequestException, SKlikException{
+        // TODO Auto-generated method stub
+        
+    }
+
+
+
+    public long create(int intValue, Keyword kw) throws InvalidRequestException, SKlikException{
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+
+
 }

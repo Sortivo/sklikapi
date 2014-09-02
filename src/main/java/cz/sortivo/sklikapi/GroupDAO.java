@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.joda.time.DateTime;
 
+import cz.sortivo.sklikapi.bean.Campaign;
 import cz.sortivo.sklikapi.bean.Group;
 import cz.sortivo.sklikapi.exception.InvalidRequestException;
 import cz.sortivo.sklikapi.exception.SKlikException;
@@ -44,6 +45,11 @@ public class GroupDAO {
         this.client = client;
     }
     
+    
+    public List<Group> listGroups(int userId)throws InvalidRequestException, SKlikException{
+        return null;
+        //TODO 
+    }
 
     @SuppressWarnings("unchecked")
     public List<Group> listGroups(List<Integer> campaignIds, boolean includeDeleted) throws InvalidRequestException, SKlikException{
@@ -140,5 +146,29 @@ public class GroupDAO {
             throw new InvalidRequestException(ex);
         }
         
+    }
+
+
+    public Group getAttributes(int intValue) throws InvalidRequestException, SKlikException{
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
+    public void setActive(int intValue)throws InvalidRequestException, SKlikException {
+        // TODO Auto-generated method stub
+        
+    }
+
+
+    public void setAttributes(Group gr) throws InvalidRequestException, SKlikException{
+        // TODO Auto-generated method stub
+        
+    }
+
+
+    public long create(int intValue, Group group)throws InvalidRequestException, SKlikException {
+        // TODO Auto-generated method stub
+        return 0;
     }
 }

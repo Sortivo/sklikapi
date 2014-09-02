@@ -1,10 +1,5 @@
 package cz.sortivo.sklikapi;
 
-import cz.sortivo.sklikapi.bean.Campaign;
-import cz.sortivo.sklikapi.exception.InvalidRequestException;
-import cz.sortivo.sklikapi.exception.SKlikException;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -12,6 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.joda.time.DateTime;
+
+import cz.sortivo.sklikapi.bean.Campaign;
+import cz.sortivo.sklikapi.exception.InvalidRequestException;
+import cz.sortivo.sklikapi.exception.SKlikException;
 
 /**
  * http://api.sklik.cz/listCampaigns.html
@@ -49,6 +48,29 @@ public class CampaignDAO {
     public CampaignDAO(Client client) {
         this.client = client;
     }
+    
+    public List<Campaign> listCampaigns()throws InvalidRequestException, SKlikException{
+        return null;
+        //TODO 
+    }
+    
+    public List<Campaign> listCampaigns(int userId)throws InvalidRequestException, SKlikException{
+        return null;
+        //TODO 
+    }
+    
+  
+    
+    public Integer create(Campaign c)throws InvalidRequestException, SKlikException{
+        return null;
+        //TODO 
+    }
+    
+    public Integer create(Campaign c, int userId)throws InvalidRequestException, SKlikException{
+        return null;
+        //TODO 
+    }
+    
     
 
     public Map<String, Object> pause(List<Campaign> campaigns) throws InvalidRequestException, SKlikException{

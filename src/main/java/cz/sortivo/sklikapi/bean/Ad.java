@@ -10,6 +10,8 @@ import org.joda.time.DateTime;
 
 import cz.sortivo.sklikapi.SKlikObject;
 import cz.sortivo.sklikapi.Status;
+import cz.sortivo.sklikapi.exception.InvalidRequestException;
+import cz.sortivo.sklikapi.exception.SKlikException;
 
 /**
  *
@@ -217,6 +219,11 @@ public class Ad  implements SKlikObject{
         } else if (!creative3.equals(other.creative3))
             return false;
         return true;
+    }
+
+    public boolean isRemoved() {
+        // TODO Auto-generated method stub
+        return false;
     }
 
     

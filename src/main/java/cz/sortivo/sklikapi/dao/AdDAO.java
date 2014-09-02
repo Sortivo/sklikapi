@@ -131,6 +131,15 @@ public class AdDAO {
         return ads;
 
     }
+    
+    public Integer create(int groupId, Ad ad) throws InvalidRequestException, SKlikException{
+        return null;
+        
+    }
+    
+    public void setActive(int adId)throws InvalidRequestException, SKlikException{
+        
+    }
 
     /**
      * Performs creation of specified ads. API method is transactional. Id some
@@ -297,6 +306,16 @@ public class AdDAO {
             throw new InvalidRequestException(ex);
         }
 
+    }
+
+    public List<Ad> listAds(int intValue) throws InvalidRequestException, SKlikException{
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public void setAttributes(Integer id, Ad ad)throws InvalidRequestException, SKlikException {
+        // TODO Auto-generated method stub
+        
     }
 
 }
