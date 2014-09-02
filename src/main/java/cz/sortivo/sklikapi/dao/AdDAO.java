@@ -65,10 +65,10 @@ public class AdDAO {
     private static final Set<String> CREATE_METHOD_ALLOWED_FIELDS = new HashSet<>(Arrays.asList(new String[] {
             FIELD_GROUP_ID, FIELD_CREATIVE_1, FIELD_CREATIVE_2, FIELD_CREATIVE_3, FIELD_CLICKTHRU_TEXT,
             FIELD_CLICKTHRU_URL, FIELD_STATUS, FIELD_PREMISE_MODE, FIELD_PREMISE_ID }));
-    
+
     private static final Set<String> UPDATE_METHOD_ALLOWED_FIELDS = new HashSet<>(Arrays.asList(new String[] {
-            FIELD_ID, FIELD_CREATIVE_1, FIELD_CREATIVE_2, FIELD_CREATIVE_3, FIELD_CLICKTHRU_TEXT,
-            FIELD_CLICKTHRU_URL, FIELD_STATUS, FIELD_PREMISE_MODE, FIELD_PREMISE_ID }));
+            FIELD_ID, FIELD_CREATIVE_1, FIELD_CREATIVE_2, FIELD_CREATIVE_3, FIELD_CLICKTHRU_TEXT, FIELD_CLICKTHRU_URL,
+            FIELD_STATUS, FIELD_PREMISE_MODE, FIELD_PREMISE_ID }));
 
     private Client client;
 
@@ -131,14 +131,14 @@ public class AdDAO {
         return ads;
 
     }
-    
-    public Integer create(int groupId, Ad ad) throws InvalidRequestException, SKlikException{
+
+    public Integer create(int groupId, Ad ad) throws InvalidRequestException, SKlikException {
         return null;
-        
+
     }
-    
-    public void setActive(int adId)throws InvalidRequestException, SKlikException{
-        
+
+    public void setActive(int adId) throws InvalidRequestException, SKlikException {
+
     }
 
     /**
@@ -170,11 +170,54 @@ public class AdDAO {
                     "Count of ads to create over exceeds allowed API limit, see api.limits for current details");
         }
 
+        return save(ads, CREATE_METHOD_ALLOWED_FIELDS, CREATE_METHOD_NAME);
+
+    }
+
+    /**
+     * Performs update operation on list of ads. Ad title, content and URLs
+     * (creative1, creative2, creative3, clickthruText) cannot be changed. Old
+     * ad will be deleted and new one will be created and newIds will be
+     * provided in response.
+     * 
+     * @param ads
+     * @return AdResponse object, may contain ad diagnostics if it was not
+     *         processed correctly but was written to SKlik. Also may contain ad
+     *         objects with updated id;
+     * @throws InvalidRequestException
+     *             if request or response is syntacticly incorrect for
+     *             processing with XMLRPC client
+     * @throws AdCreationException
+     *             - May be thrown if some of ads contains fatal error due to
+     *             the whole transaction is rollbacked. Contains additional
+     *             information with error cause and list of ads that caused
+     *             errors.
+     * @throws SKlikException
+     */
+    public List<AdResponse> update(List<Ad> ads) throws InvalidRequestException, AdCreationException, SKlikException {
+
+        if (ads == null) {
+            throw new IllegalArgumentException("Ads cannot be null");
+        }
+
+        if (ads.size() > LIMIT_ADS_TO_CREATE) {
+            throw new IllegalArgumentException(
+                    "Count of ads to create over exceeds allowed API limit, see api.limits for current details");
+        }
+
+        return save(ads, UPDATE_METHOD_ALLOWED_FIELDS, UPDATE_METHOD_NAME);
+
+    }
+
+    
+    
+    protected List<AdResponse> save(List<Ad> ads, final Set<String> ALLOWED_FIELDS, final String METHOD_NAME)
+            throws InvalidRequestException, AdCreationException, SKlikException {
         List<Map<String, Object>> adMaps = new ArrayList<>();
 
         Map<String, Object> adMap;
         for (Ad ad : ads) {
-            adMap = transformFromObject(ad, CREATE_METHOD_ALLOWED_FIELDS);
+            adMap = transformFromObject(ad, ALLOWED_FIELDS);
             adMap.put(FIELD_REQUEST_ID, ad.hashCode());
             adMaps.add(adMap);
         }
@@ -183,7 +226,7 @@ public class AdDAO {
         List<AdResponse> adResponses;
         ;
         try {
-            response = client.sendRequest(CREATE_METHOD_NAME, new Object[] { adMaps });
+            response = client.sendRequest(METHOD_NAME, new Object[] { adMaps });
             adResponses = ResponseUtils.buildsAdResponses(ads, response, false);
         } catch (SKlikException e) {
             // try to find some diagnostics
@@ -196,7 +239,6 @@ public class AdDAO {
         }
 
         return adResponses;
-
     }
 
     /**
@@ -308,14 +350,14 @@ public class AdDAO {
 
     }
 
-    public List<Ad> listAds(int intValue) throws InvalidRequestException, SKlikException{
+    public List<Ad> listAds(int intValue) throws InvalidRequestException, SKlikException {
         // TODO Auto-generated method stub
         return null;
     }
 
-    public void setAttributes(Integer id, Ad ad)throws InvalidRequestException, SKlikException {
+    public void setAttributes(Integer id, Ad ad) throws InvalidRequestException, SKlikException {
         // TODO Auto-generated method stub
-        
+
     }
 
 }
