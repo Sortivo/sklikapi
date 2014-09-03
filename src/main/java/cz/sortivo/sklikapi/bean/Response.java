@@ -1,36 +1,43 @@
 package cz.sortivo.sklikapi.bean;
 
-import java.awt.List;
+import java.util.List;
 
 
-public class Response {
+public class Response<T> {
     
-    private int status;
-    private String statusMessage;
+    T entity;
+    List<Diagnostic> diagnostics;
+    
+    protected Response(){
+        
+    }
+    
+    public Response(T entity, List<Diagnostic> diagnostics){
+        this.diagnostics = diagnostics;
+        this.entity = entity;
+    }
+    
+    public List<Diagnostic> getDiagnostics() {
+        return diagnostics;
+    }
+    public void setDiagnostics(List<Diagnostic> diagnostics) {
+        this.diagnostics = diagnostics;
+    }
+
+    public T getEntity() {
+        return entity;
+    }
+
+    public void setEntity(T entity) {
+        this.entity = entity;
+    }
+
+    @Override
+    public String toString() {
+        return "Response [entity=" + entity + ", diagnostics=" + diagnostics + "]";
+    }
     
     
+    
 
-    public Response(int status, String statusMessage) {
-        super();
-        this.status = status;
-        this.statusMessage = statusMessage;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public String getStatusMessage() {
-        return statusMessage;
-    }
-
-    public void setStatusMessage(String statusMessage) {
-        this.statusMessage = statusMessage;
-    }
-
-   
 }

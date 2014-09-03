@@ -5,16 +5,24 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import cz.sortivo.sklikapi.bean.Ad;
-import cz.sortivo.sklikapi.bean.AdResponse;
 import cz.sortivo.sklikapi.bean.Diagnostic;
+import cz.sortivo.sklikapi.bean.Response;
 
-public class ResponseUtils {
+public abstract class ResponseUtils {
+    
     private static final String FIELD_DIAGNOSTICS = "diagnostics";
-    private static final String FIELD_AD_IDS = "adIds";
-
+    private String idsStructName;
+    
+    public ResponseUtils(String idsStructName) {
+        this.idsStructName = idsStructName;
+    }
+    
+    abstract Integer parseRequestId(Object object);
+    abstract String getRequestIdFieldName();
+    abstract <T> Map<Integer, T> mapEntitiesWithRequestId(List<T> entities);
+    
     @SuppressWarnings("unchecked")
-    public static Map<Integer, List<Diagnostic>> mapDiagnostics(Map<String, Object> response, boolean errorsOnly) {
+    public Map<Integer, List<Diagnostic>> mapDiagnostics(Map<String, Object> response,  boolean errorsOnly) {
 
         Map<Integer, List<Diagnostic>> diagnostics = new LinkedHashMap<>();
 
@@ -24,10 +32,10 @@ public class ResponseUtils {
 
                 Map<String, Object> map = (Map<String, Object>) obj;
                 
-                if (map.containsKey(Diagnostic.FIELD_REQUEST_ID)) {
+                if (map.containsKey(getRequestIdFieldName())) {
                     // identified request found
                     List<Diagnostic> curDiagnostic;
-                    Integer requestId = (Integer) map.get(Diagnostic.FIELD_REQUEST_ID);
+                    Integer requestId = (Integer) parseRequestId(map.get(getRequestIdFieldName()));
                     String type = (String) map.get(Diagnostic.FIELD_TYPE);
 
                     if (!errorsOnly || Diagnostic.FIELD_TYPE_ERROR.equals(type)) {
@@ -50,30 +58,28 @@ public class ResponseUtils {
 
         return diagnostics;
     }
-
+    
     @SuppressWarnings("unchecked")
-    public static List<AdResponse> buildsAdResponses(List<Ad> ads, Map<String, Object> response, boolean errorsOnly) {
-        Map<Integer, List<Diagnostic>> diagnostics = ResponseUtils.mapDiagnostics(response, errorsOnly);
-
-        List<AdResponse> responses = new LinkedList<>();
+    public <T extends SKlikObject> List<Response<T>> buildResponses(List<T> entities, Map<String, Object> response, boolean errorsOnly) {
+        Map<Integer, List<Diagnostic>> diagnostics = mapDiagnostics(response, errorsOnly);
+        Map<Integer, T> mappedEntities = mapEntitiesWithRequestId(entities);
+        
+        List<Response<T>> responses = new LinkedList<>();
 
         List<Integer> ids = null;
-        if (response.containsKey(FIELD_AD_IDS)) {
-            ids = (List<Integer>) response.get(FIELD_AD_IDS);
-            if(ids.size() != ads.size()){
-                throw new IllegalStateException("Count of received ad ids does not match count of sent ads");
-            }             
+        if (response.containsKey(idsStructName)) {
+            ids = (List<Integer>) response.get(idsStructName);         
         }
 
         int curIndex = 0;
-        for (Ad ad : ads) {
+        for (Integer entityKey : mappedEntities.keySet()) {
 
-            if (!errorsOnly || diagnostics.containsKey(ad.hashCode())) {
+            if (!errorsOnly || diagnostics.containsKey(entityKey)) {
                 if(ids != null){
-                    ad.setId(ids.get(curIndex));
+                    mappedEntities.get(entityKey).setId(ids.get(curIndex++));
                 }
                 
-                responses.add(new AdResponse(ad, diagnostics.get(ad.hashCode())));
+                responses.add(new Response<T>(mappedEntities.get(entityKey), diagnostics.get(entityKey)));
             }
         }
 
