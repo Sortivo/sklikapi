@@ -15,6 +15,7 @@ public class Diagnostic {
     
     private final String name;
     private final Integer requestId;
+    
     private final String type;
     private final Map<String, Object> diagnosticResponse;
    

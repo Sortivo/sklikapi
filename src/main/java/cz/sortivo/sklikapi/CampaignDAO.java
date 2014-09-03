@@ -126,4 +126,14 @@ public class CampaignDAO {
         }
         
     }
+
+    public List<Campaign> listActiveCampaigns(Integer sklikUserId)throws InvalidRequestException, SKlikException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public void pauseCampaign(Integer campaignId)throws InvalidRequestException, SKlikException {
+        // TODO Auto-generated method stub
+        
+    }
 }

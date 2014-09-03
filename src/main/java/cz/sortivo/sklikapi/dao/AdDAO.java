@@ -15,13 +15,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.sortivo.sklikapi.Client;
-import cz.sortivo.sklikapi.ResponseUtils;
 import cz.sortivo.sklikapi.EntityType;
+import cz.sortivo.sklikapi.RequestIdMappedResponseUtils;
+import cz.sortivo.sklikapi.ResponseUtils;
 import cz.sortivo.sklikapi.Status;
 import cz.sortivo.sklikapi.bean.Ad;
-import cz.sortivo.sklikapi.bean.AdResponse;
-import cz.sortivo.sklikapi.bean.Diagnostic;
+import cz.sortivo.sklikapi.bean.Response;
 import cz.sortivo.sklikapi.exception.AdCreationException;
+import cz.sortivo.sklikapi.exception.EntityCreationException;
 import cz.sortivo.sklikapi.exception.InvalidRequestException;
 import cz.sortivo.sklikapi.exception.SKlikException;
 
@@ -33,7 +34,7 @@ import cz.sortivo.sklikapi.exception.SKlikException;
  * 
  * @author Michal Ličko licko61@gmail.com (C) 2014
  */
-public class AdDAO {
+public class AdDAO extends AbstractDAO<Ad> {
 
     Logger logger = LoggerFactory.getLogger(AdDAO.class);
 
@@ -67,6 +68,8 @@ public class AdDAO {
             FIELD_ID, FIELD_CLICKTHRU_URL, FIELD_STATUS, FIELD_PREMISE_MODE, FIELD_PREMISE_ID }));
 
     private Client client;
+    
+    private ResponseUtils responseUtils = new RequestIdMappedResponseUtils("adIds");
 
     public AdDAO(Client client) {
         this.client = client;
@@ -148,25 +151,16 @@ public class AdDAO {
      * @throws InvalidRequestException
      *             if request or response is syntacticly incorrect for
      *             processing with XMLRPC client
-     * @throws AdCreationException
+     * @throws EntityCreationException
      *             - May be thrown if some of ads contains fatal error due to
      *             the whole transaction is rollbacked. Contains additional
      *             information with error cause and list of ads that caused
      *             errors.
      * @throws SKlikException
      */
-    public List<AdResponse> create(List<Ad> ads) throws InvalidRequestException, AdCreationException, SKlikException {
-
-        if (ads == null) {
-            throw new IllegalArgumentException("Ads cannot be null");
-        }
-
-        if (ads.size() > LIMIT_ADS_TO_CREATE) {
-            throw new IllegalArgumentException(
-                    "Count of ads to create exceeds allowed API limit, see api.limits for current details");
-        }
-
-        return save(ads, CREATE_METHOD_ALLOWED_FIELDS, CREATE_METHOD_NAME);
+    @Override
+    public List<Response<Ad>> create(List<Ad> ads) throws InvalidRequestException, EntityCreationException, SKlikException {
+        return save(ads, CREATE_METHOD_ALLOWED_FIELDS, CREATE_METHOD_NAME, LIMIT_ADS_TO_CREATE);
 
     }
 
@@ -183,79 +177,22 @@ public class AdDAO {
      * @throws InvalidRequestException
      *             if request or response is syntacticly incorrect for
      *             processing with XMLRPC client
-     * @throws AdCreationException
+     * @throws EntityCreationException
      *             - May be thrown if some of ads contains fatal error due to
      *             the whole transaction is rollbacked. Contains additional
      *             information with error cause and list of ads that caused
      *             errors.
      * @throws SKlikException
      */
-    public List<AdResponse> update(List<Ad> ads) throws InvalidRequestException, AdCreationException, SKlikException {
-
-        if (ads == null) {
-            throw new IllegalArgumentException("Ads cannot be null");
-        }
-
-        if (ads.size() > LIMIT_ADS_TO_UPDATE) {
-            throw new IllegalArgumentException(
-                    "Count of ads to update exceeds allowed API limit, see api.limits for current details");
-        }
-
-        return save(ads, UPDATE_METHOD_ALLOWED_FIELDS, UPDATE_METHOD_NAME);
+    @Override
+    public List<Response<Ad>> update(List<Ad> ads) throws InvalidRequestException, EntityCreationException, SKlikException {
+        return save(ads, UPDATE_METHOD_ALLOWED_FIELDS, UPDATE_METHOD_NAME, LIMIT_ADS_TO_UPDATE);
 
     }
 
-    /**
-     * Proceed specified operation (usually create/update) on specified list of
-     * ads
-     * 
-     * @param ads
-     * @param ALLOWED_FIELDS
-     *            - fields that can be send via API
-     * @param METHOD_NAME
-     *            - specifies method that will be called
-     * @return AdResponse object, may contain ad diagnostics if it was not
-     *         processed correctly but was written to SKlik. Also may contain ad
-     *         objects with updated id;
-     * @throws InvalidRequestException
-     *             if request or response is syntacticly incorrect for
-     *             processing with XMLRPC client
-     * @throws AdCreationException
-     *             - May be thrown if some of ads contains fatal error due to
-     *             the whole transaction is rollbacked. Contains additional
-     *             information with error cause and list of ads that caused
-     *             errors.
-     * @throws SKlikException
-     */
-    protected List<AdResponse> save(List<Ad> ads, final Set<String> ALLOWED_FIELDS, final String METHOD_NAME)
-            throws InvalidRequestException, AdCreationException, SKlikException {
-        List<Map<String, Object>> adMaps = new ArrayList<>();
 
-        Map<String, Object> adMap;
-        for (Ad ad : ads) {
-            adMap = transformFromObject(ad, ALLOWED_FIELDS);
-            adMap.put(FIELD_REQUEST_ID, ad.hashCode());
-            adMaps.add(adMap);
-        }
-
-        Map<String, Object> response;
-        List<AdResponse> adResponses;
-        ;
-        try {
-            response = client.sendRequest(METHOD_NAME, new Object[] { adMaps });
-            adResponses = ResponseUtils.buildsAdResponses(ads, response, false);
-        } catch (SKlikException e) {
-            // try to find some diagnostics
-            if (e.getStatus() == 400 || e.getStatus() == 406) {
-                adResponses = ResponseUtils.buildsAdResponses(ads, e.getResponse(), true);
-                throw new AdCreationException("Could not create " + ads.size()
-                        + " ads! Requested batch contains errors.", adResponses, e);
-            }
-            throw e;
-        }
-
-        return adResponses;
-    }
+    
+    
 
     /**
      * Performs pause operation on all ads with specified IDs.
@@ -295,7 +232,8 @@ public class AdDAO {
      *            an empty map will be returned
      * @return Map containing object's attributes allowed by FIELDS definition
      */
-    private Map<String, Object> transformFromObject(Ad ad, final Set FIELDS) {
+    @Override
+    protected Map<String, Object> transformFromObject(Ad ad, final Set FIELDS) {
         Map<String, Object> map = new HashMap<>();
 
         if (FIELDS == null) {
@@ -385,5 +323,29 @@ public class AdDAO {
         // TODO Auto-generated method stub
 
     }
+
+    @Override
+    protected boolean supportsRequestId() {
+        return true;
+    }
+
+    @Override
+    protected ResponseUtils getResponseUtils() {
+        return responseUtils;
+    }
+
+    @Override
+    protected EntityCreationException getCreationException(String message, List<Response<Ad>> entityResponses,
+            Throwable cause) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public void setSuspend(Integer id)throws InvalidRequestException, SKlikException {
+        // TODO Auto-generated method stub
+        
+    }
+
+
 
 }
