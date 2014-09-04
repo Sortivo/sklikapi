@@ -30,11 +30,11 @@ import cz.sortivo.sklikapi.exception.SKlikException;
 public class GroupDAO extends AbstractDAO<Group> {
     private static final String LIST_GROUPS_METHOD_NAME = "groups.list";
     private static final String GET_GROUPS_METHOD_NAME = "groups.get";
-    private static final String CREATE_GROUP_METHOD_NAME = "group.create";
-    private static final String REMOVE_GROUP_METHOD_NAME = "group.remove";
-    private static final String RESTORE_GROUP_METHOD_NAME = "group.restore";
+    private static final String CREATE_GROUP_METHOD_NAME = "groups.create";
+    private static final String REMOVE_GROUP_METHOD_NAME = "groups.remove";
+    private static final String RESTORE_GROUP_METHOD_NAME = "groups.restore";
     private static final String UPDATE_METHOD_NAME = "groups.update";
-    private static final String CHECK_METHOD_NAME = "group.getAttributes";
+
 
     private static final String FIELD_ID = "id";
     private static final String FIELD_NAME = "name";
@@ -60,7 +60,6 @@ public class GroupDAO extends AbstractDAO<Group> {
 
     private ResponseUtils responseUtils = new IndexMappedResponseUtils("groupIds ");
 
-    private Client client;
 
     public GroupDAO(Client client) {
         this.client = client;

@@ -1,12 +1,26 @@
 package cz.sortivo.sklikapi.exception;
 
+import java.util.List;
 
-public class EntityCreationException extends Exception{
+import cz.sortivo.sklikapi.SKlikObject;
+import cz.sortivo.sklikapi.bean.Response;
 
-    public EntityCreationException(String message, Throwable cause) {
+
+public abstract class EntityCreationException extends Exception{
+
+
+    private static final long serialVersionUID = 1L;
+    
+    private final List<Response<? extends SKlikObject>> failedEntities;
+    
+    public EntityCreationException(String message, List<Response<? extends SKlikObject>> entityResponses, Throwable cause) {
         super(message, cause);
-        // TODO Auto-generated constructor stub
+        
+        failedEntities = entityResponses;
     }
 
+    public List<Response<? extends SKlikObject>> getFailedEntities() {
+        return failedEntities;
+    }
 
 }

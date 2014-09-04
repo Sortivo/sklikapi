@@ -42,8 +42,8 @@ public class AdDAO extends AbstractDAO<Ad> {
     private static final String UPDATE_METHOD_NAME = "ads.update";
     private static final String CREATE_METHOD_NAME = "ads.create";
 
-    private static final int LIMIT_ADS_TO_CREATE = 100;
-    private static final int LIMIT_ADS_TO_UPDATE = 100;
+    public static final int LIMIT_ADS_TO_CREATE = 100;
+    public static final int LIMIT_ADS_TO_UPDATE = 100;
 
     private static final String FIELD_ID = "id";
     private static final String FIELD_CREATIVE_1 = "creative1";
@@ -68,9 +68,7 @@ public class AdDAO extends AbstractDAO<Ad> {
             FIELD_ID, FIELD_CLICKTHRU_URL, FIELD_STATUS, FIELD_PREMISE_MODE, FIELD_PREMISE_ID }));
 
     public static final int LIMIT_ADS_TO_GET = 100;
-
-    private Client client;
-    
+  
     private ResponseUtils responseUtils = new RequestIdMappedResponseUtils("adIds");
 
     public AdDAO(Client client) {
@@ -339,8 +337,8 @@ public class AdDAO extends AbstractDAO<Ad> {
     @Override
     protected EntityCreationException getCreationException(String message, List<Response<Ad>> entityResponses,
             Throwable cause) {
-        // TODO Auto-generated method stub
-        return null;
+        
+        return new AdCreationException("sds", entityResponses, cause);
     }
 
     public void setSuspend(Integer id)throws InvalidRequestException, SKlikException {

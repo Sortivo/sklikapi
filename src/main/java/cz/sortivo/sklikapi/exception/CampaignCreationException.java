@@ -5,21 +5,23 @@ import java.util.List;
 
 import cz.sortivo.sklikapi.SKlikObject;
 import cz.sortivo.sklikapi.bean.Ad;
+import cz.sortivo.sklikapi.bean.Campaign;
 import cz.sortivo.sklikapi.bean.Response;
 
-public class AdCreationException extends EntityCreationException {
+public class CampaignCreationException extends EntityCreationException {
 
-    public AdCreationException(String message, List<Response<Ad>> entityResponses, Throwable cause) {
-        super(message, AdCreationException.mapResponses(entityResponses), cause);
+
+    public CampaignCreationException(String message, List<Response<Campaign>> entityResponses, Throwable cause) {
+        super(message, CampaignCreationException.mapResponses(entityResponses), cause);
 
     }
 
-    public static List<Response<? extends SKlikObject>> mapResponses(List<Response<Ad>> entityResponses) {
+    public static List<Response<? extends SKlikObject>> mapResponses(List<Response<Campaign>> entityResponses) {
         List<Response<? extends SKlikObject>> responsesList = new LinkedList<>();
         responsesList.addAll(entityResponses);
+
         return responsesList;
     }
-
     private static final long serialVersionUID = 1L;
 
 }

@@ -38,8 +38,8 @@ public class KeywordDAO extends AbstractDAO<Keyword> {
     private static final String REMOVE_KEYWORD_METHOD_NAME = "keyword.remove";
     private static final String RESTORE_KEYWORD_METHOD_NAME = "keyword.restore";
 
-    private static final int LIMIT_KEYWORDS_TO_CREATE = 5000;
-    private static final int LIMIT_KEYWORDS_TO_UPDATE = 5000;
+    public static final int LIMIT_KEYWORDS_TO_CREATE = 5000;
+    public static final int LIMIT_KEYWORDS_TO_UPDATE = 5000;
 
     private static final String FIELD_ID = "id";
     private static final String FIELD_NAME = "name";
@@ -71,7 +71,6 @@ public class KeywordDAO extends AbstractDAO<Keyword> {
         settableAttributes.addAll(Arrays.asList(new String[] { FIELD_CPC, FIELD_URL, FIELD_STATUS }));
     }
 
-    private Client client;
 
     public KeywordDAO(Client client) {
         this.client = client;

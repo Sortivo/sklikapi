@@ -226,5 +226,10 @@ public class Ad  implements SKlikObject{
         return false;
     }
 
+    @Override
+    public String getName() {
+        return creative1;
+    }
+
     
 }

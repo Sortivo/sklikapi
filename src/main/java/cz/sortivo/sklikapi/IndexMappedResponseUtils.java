@@ -22,7 +22,7 @@ public class IndexMappedResponseUtils extends ResponseUtils {
         
         String str = (String)object;
          
-        return new Integer(str.replace(STRUCT_NAME_PREFIX, "").replace(STRUCT_NAME_POSTFIX, ""));
+        return new Integer(str.replaceAll(".*\\[", "").replace(STRUCT_NAME_POSTFIX, ""));
     }
 
     @Override
@@ -36,7 +36,7 @@ public class IndexMappedResponseUtils extends ResponseUtils {
         
         int i = 0;
         for (T t : entities) {
-            mappedEntities.put(i, t);
+            mappedEntities.put(i++, t);
         }
         return mappedEntities;
     }

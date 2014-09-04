@@ -62,7 +62,6 @@ public class CampaignDAO extends AbstractDAO<Campaign> {
 
     private ResponseUtils responseUtils = new IndexMappedResponseUtils("groupIds ");
 
-    private Client client;
 
     public CampaignDAO(Client client) {
         this.client = client;
