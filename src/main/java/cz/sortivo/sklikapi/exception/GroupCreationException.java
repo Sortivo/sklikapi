@@ -14,5 +14,12 @@ public class GroupCreationException extends EntityCreationException {
         failedGroups = entityResponses;
     }
 
+    
+    
+    public List<Response<Group>> getFailedGroups() {
+        return failedGroups;
+    }
+
+
     private static final long serialVersionUID = 1L;
 }

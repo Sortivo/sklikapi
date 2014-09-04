@@ -29,6 +29,7 @@ import cz.sortivo.sklikapi.exception.SKlikException;
  */
 public class GroupDAO extends AbstractDAO<Group> {
     private static final String LIST_GROUPS_METHOD_NAME = "groups.list";
+    private static final String GET_GROUPS_METHOD_NAME = "groups.get";
     private static final String CREATE_GROUP_METHOD_NAME = "group.create";
     private static final String REMOVE_GROUP_METHOD_NAME = "group.remove";
     private static final String RESTORE_GROUP_METHOD_NAME = "group.restore";
@@ -45,26 +46,24 @@ public class GroupDAO extends AbstractDAO<Group> {
     private static final String FIELD_CAMPAIGN_ID = "campaignId";
     private static final String FIELD_CREATE_DATE = "createDate";
     private static final String FIELD_MAX_USER_DAILY_IMPRESSION = "maxUserDailyImpression";
-    
-    private static final int LIMIT_GROUPS_TO_CREATE = 100;
-    private static final int LIMIT_GROUPS_TO_UPDATE = 100;
+
+    public static final int LIMIT_GROUPS_TO_CREATE = 100;
+    public static final int LIMIT_GROUPS_TO_UPDATE = 100;
+    public static final int LIMIT_GROUPS_TO_GET = 100;
 
     private static final Set<String> UPDATE_METHOD_ALLOWED_FIELDS = new HashSet<>(Arrays.asList(new String[] {
-             FIELD_ID, FIELD_NAME, FIELD_STATUS, FIELD_CPC, FIELD_CPC_CONTEXT, FIELD_CPM, FIELD_MAX_USER_DAILY_IMPRESSION}));
+            FIELD_ID, FIELD_NAME, FIELD_STATUS, FIELD_CPC, FIELD_CPC_CONTEXT, FIELD_CPM,
+            FIELD_MAX_USER_DAILY_IMPRESSION }));
     private static final Set<String> CREATE_METHOD_ALLOWED_FIELDS = new HashSet<>(Arrays.asList(new String[] {
-            FIELD_CAMPAIGN_ID, FIELD_NAME, FIELD_CPC, FIELD_CPC_CONTEXT, FIELD_CPM, FIELD_STATUS, FIELD_MAX_USER_DAILY_IMPRESSION}));
-    
+            FIELD_CAMPAIGN_ID, FIELD_NAME, FIELD_CPC, FIELD_CPC_CONTEXT, FIELD_CPM, FIELD_STATUS,
+            FIELD_MAX_USER_DAILY_IMPRESSION }));
+
     private ResponseUtils responseUtils = new IndexMappedResponseUtils("groupIds ");
-    
+
     private Client client;
 
     public GroupDAO(Client client) {
         this.client = client;
-    }
-
-    public List<Group> listGroups(int userId) throws InvalidRequestException, SKlikException {
-        return null;
-        // TODO
     }
 
     @SuppressWarnings("unchecked")
@@ -86,6 +85,30 @@ public class GroupDAO extends AbstractDAO<Group> {
 
     }
 
+    @SuppressWarnings("unchecked")
+    public List<Group> listGroups(List<Integer> groupIds) throws InvalidRequestException, SKlikException {
+
+        //check if parameter are valid
+        if (groupIds == null)
+            throw new IllegalAccessError("Group ids list cannot be null");
+        if (groupIds.size() > LIMIT_GROUPS_TO_GET)
+            throw new IllegalArgumentException(
+                    "Group list exceeds a group count limit for GET operation. Current known limit value is: "
+                            + LIMIT_GROUPS_TO_GET);
+
+        Map<String, Object> restrictionFilter = new LinkedHashMap<>();
+        restrictionFilter.put("campaignIds", groupIds);
+
+        Map<String, Object> response = client.sendRequest(GET_GROUPS_METHOD_NAME, new Object[] { restrictionFilter });
+
+        List<Group> groups = new ArrayList<>();
+        for (Object object : (Object[]) response.get("groups")) {
+            groups.add(transformToObject((Map<String, Object>) object));
+        }
+
+        return groups;
+
+    }
 
     /**
      * Performs suspend operation on all specified groups
@@ -166,26 +189,6 @@ public class GroupDAO extends AbstractDAO<Group> {
 
     }
 
-    public Group getAttributes(int intValue) throws InvalidRequestException, SKlikException {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public void setActive(int intValue) throws InvalidRequestException, SKlikException {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void setAttributes(Group gr) throws InvalidRequestException, SKlikException {
-        // TODO Auto-generated method stub
-
-    }
-
-    public long create(int intValue, Group group) throws InvalidRequestException, SKlikException {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
     @Override
     protected boolean supportsRequestId() {
         return false;
@@ -212,6 +215,36 @@ public class GroupDAO extends AbstractDAO<Group> {
     public List<Response<Group>> update(List<Group> entities) throws InvalidRequestException, EntityCreationException,
             SKlikException {
         return save(entities, UPDATE_METHOD_ALLOWED_FIELDS, UPDATE_METHOD_NAME, LIMIT_GROUPS_TO_UPDATE);
+    }
+
+    @Deprecated
+    public List<Group> listGroups(int userId) throws InvalidRequestException, SKlikException {
+        return null;
+        // TODO
+    }
+
+    @Deprecated
+    public Group getAttributes(int intValue) throws InvalidRequestException, SKlikException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Deprecated
+    public void setActive(int intValue) throws InvalidRequestException, SKlikException {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Deprecated
+    public void setAttributes(Group gr) throws InvalidRequestException, SKlikException {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Deprecated
+    public long create(int intValue, Group group) throws InvalidRequestException, SKlikException {
+        // TODO Auto-generated method stub
+        return 0;
     }
 
 }

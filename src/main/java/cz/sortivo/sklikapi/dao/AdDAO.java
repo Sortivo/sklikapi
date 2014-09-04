@@ -67,6 +67,8 @@ public class AdDAO extends AbstractDAO<Ad> {
     private static final Set<String> UPDATE_METHOD_ALLOWED_FIELDS = new HashSet<>(Arrays.asList(new String[] {
             FIELD_ID, FIELD_CLICKTHRU_URL, FIELD_STATUS, FIELD_PREMISE_MODE, FIELD_PREMISE_ID }));
 
+    public static final int LIMIT_ADS_TO_GET = 100;
+
     private Client client;
     
     private ResponseUtils responseUtils = new RequestIdMappedResponseUtils("adIds");

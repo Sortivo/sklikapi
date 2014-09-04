@@ -65,6 +65,8 @@ public class KeywordDAO extends AbstractDAO<Keyword> {
     private ResponseUtils responseUtils = new IndexMappedResponseUtils("positiveKeywordIds ");
 
     private static final Set<String> settableAttributes = new HashSet<>();
+
+    public static final int LIMIT_KEYWORDS_TO_GET = 5000;
     static {
         settableAttributes.addAll(Arrays.asList(new String[] { FIELD_CPC, FIELD_URL, FIELD_STATUS }));
     }
