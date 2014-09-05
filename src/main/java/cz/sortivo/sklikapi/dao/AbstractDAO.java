@@ -44,9 +44,9 @@ public abstract class AbstractDAO<T extends SKlikObject> {
      *            - fields that can be send via API
      * @param METHOD_NAME
      *            - specifies method that will be called
-     * @return Response object, may contain diagnostics if it was not processed
+     * @return Response objects, may contain diagnostics if it was not processed
      *         correctly but was written to SKlik. Also may contain objects with
-     *         updated id;
+     *         updated id, responses are returned in same order as their related entities came;
      * @throws InvalidRequestException
      *             if request or response is syntacticly incorrect for
      *             processing with XMLRPC client

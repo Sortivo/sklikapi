@@ -2,7 +2,7 @@ package cz.sortivo.sklikapi;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.TreeMap;
 
 public class RequestIdMappedResponseUtils extends ResponseUtils {
 
@@ -24,8 +24,8 @@ public class RequestIdMappedResponseUtils extends ResponseUtils {
     }
 
     @Override
-    protected <T> Map<Integer, T> mapEntitiesWithRequestId(List<T> entities) {
-        Map<Integer, T> mappedEntities = new LinkedHashMap<>();
+    protected <T> LinkedHashMap<Integer, T> mapEntitiesWithRequestId(List<T> entities) {
+        LinkedHashMap<Integer, T> mappedEntities = new LinkedHashMap<>();
         
         
         for (T t : entities) {
