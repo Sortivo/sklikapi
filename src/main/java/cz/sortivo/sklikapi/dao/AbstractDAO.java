@@ -30,7 +30,7 @@ public abstract class AbstractDAO<T extends SKlikObject> {
 
     abstract public List<Response<T>> update(List<T> entities) throws InvalidRequestException, EntityCreationException,
             SKlikException;
-
+    
     protected Client client;
 
     private static final String FIELD_REQUEST_ID = "requestId";
