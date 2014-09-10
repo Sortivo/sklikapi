@@ -102,15 +102,12 @@ public class CampaignDAO extends AbstractDAO<Campaign> {
         // TODO
     }
 
-    public Integer create(Campaign c) throws InvalidRequestException, SKlikException {
-        return null;
-        // TODO
+    public Integer create(Campaign c) throws InvalidRequestException, SKlikException, EntityCreationException {
+        List<Response<Campaign>> campaignResponse = create(new LinkedList<Campaign>(Arrays.asList(new Campaign[]{c})));
+        
+        return campaignResponse.get(0).getEntity().getId();
     }
 
-    public Integer create(Campaign c, int userId) throws InvalidRequestException, SKlikException {
-        return null;
-        // TODO
-    }
     
     public Map<String, Object> pause(List<Campaign> campaigns) throws InvalidRequestException, SKlikException {
         List<Map<String, Object>> campsList = new LinkedList<>();
