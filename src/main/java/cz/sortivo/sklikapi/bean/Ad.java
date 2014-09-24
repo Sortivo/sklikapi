@@ -165,9 +165,8 @@ public class Ad  implements SKlikObject{
                 + "]";
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
+
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -178,12 +177,15 @@ public class Ad  implements SKlikObject{
         result = prime * result + ((creative1 == null) ? 0 : creative1.hashCode());
         result = prime * result + ((creative2 == null) ? 0 : creative2.hashCode());
         result = prime * result + ((creative3 == null) ? 0 : creative3.hashCode());
+        result = prime * result + (deleted ? 1231 : 1237);
+        result = prime * result + ((groupId == null) ? 0 : groupId.hashCode());
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((premiseId == null) ? 0 : premiseId.hashCode());
+        result = prime * result + ((premiseMode == null) ? 0 : premiseMode.hashCode());
+        result = prime * result + ((status == null) ? 0 : status.hashCode());
         return result;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -203,6 +205,11 @@ public class Ad  implements SKlikObject{
                 return false;
         } else if (!clickthruUrl.equals(other.clickthruUrl))
             return false;
+        if (createDate == null) {
+            if (other.createDate != null)
+                return false;
+        } else if (!createDate.equals(other.createDate))
+            return false;
         if (creative1 == null) {
             if (other.creative1 != null)
                 return false;
@@ -217,6 +224,30 @@ public class Ad  implements SKlikObject{
             if (other.creative3 != null)
                 return false;
         } else if (!creative3.equals(other.creative3))
+            return false;
+        if (deleted != other.deleted)
+            return false;
+        if (groupId == null) {
+            if (other.groupId != null)
+                return false;
+        } else if (!groupId.equals(other.groupId))
+            return false;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (premiseId == null) {
+            if (other.premiseId != null)
+                return false;
+        } else if (!premiseId.equals(other.premiseId))
+            return false;
+        if (premiseMode == null) {
+            if (other.premiseMode != null)
+                return false;
+        } else if (!premiseMode.equals(other.premiseMode))
+            return false;
+        if (status != other.status)
             return false;
         return true;
     }

@@ -11,6 +11,7 @@ import java.util.Map;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
+import org.apache.xmlrpc.client.XmlRpcCommonsTransportFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,6 +79,7 @@ public class Client {
             rpcClient = new XmlRpcClient();
            
             rpcClient.setConfig(config);
+//            rpcClient.setTransportFactory(new XmlRpcCommonsTransportFactory(rpcClient));
             rpcClient.setTypeFactory(new XmlRpcTypeNil(rpcClient));
         } catch (MalformedURLException ex) {
             throw new InvalidRequestException("Malformed URL " + getUrl(), ex);

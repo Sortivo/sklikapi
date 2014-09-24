@@ -60,7 +60,7 @@ public class CampaignDAO extends AbstractDAO<Campaign> {
             FIELD_NAME, FIELD_DAY_BUDGET, FIELD_TOTAL_BUDGET, FIELD_TOTAL_CLICKS, FIELD_AD_SELECTION, FIELD_START_DATE,
             FIELD_END_DATE, FIELD_STATUS }));
 
-    private ResponseUtils responseUtils = new IndexMappedResponseUtils("groupIds ");
+    private ResponseUtils responseUtils = new IndexMappedResponseUtils("campaignIds");
 
 
     public CampaignDAO(Client client) {
@@ -83,14 +83,11 @@ public class CampaignDAO extends AbstractDAO<Campaign> {
     
     @SuppressWarnings("unchecked")
     public List<Campaign> listCampaigns(List<Integer> campaignIds) throws InvalidRequestException, SKlikException{
-        Map<String, Object> restrictionFilter = new LinkedHashMap<>();
-
-        restrictionFilter.put("campaignIds", campaignIds);
-
-        Map<String, Object> response = client.sendRequest(GET_CAMPAIGNS_METHOD_NAME, new Object[] { restrictionFilter });
+  
+        Map<String, Object> response = client.sendRequest(GET_CAMPAIGNS_METHOD_NAME, new Object[] { campaignIds });
 
         List<Campaign> campaigns = new ArrayList<>();
-        for (Object object : (Object[]) response.get("groups")) {
+        for (Object object : (Object[]) response.get("campaigns")) {
             campaigns.add(transformToObject((Map<String, Object>) object));
         }
 

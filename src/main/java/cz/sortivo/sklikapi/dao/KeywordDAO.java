@@ -62,11 +62,11 @@ public class KeywordDAO extends AbstractDAO<Keyword> {
     private static final Set<String> UPDATE_METHOD_ALLOWED_FIELDS = new HashSet<>(Arrays.asList(new String[] {
             FIELD_ID, FIELD_CPC, FIELD_URL, FIELD_STATUS }));
     
-    private ResponseUtils responseUtils = new IndexMappedResponseUtils("positiveKeywordIds ");
+    private ResponseUtils responseUtils = new IndexMappedResponseUtils("positiveKeywordIds");
 
     private static final Set<String> settableAttributes = new HashSet<>();
 
-    public static final int LIMIT_KEYWORDS_TO_GET = 5000;
+    public static final int LIMIT_KEYWORDS_TO_GET = 100;
     static {
         settableAttributes.addAll(Arrays.asList(new String[] { FIELD_CPC, FIELD_URL, FIELD_STATUS }));
     }
@@ -282,8 +282,7 @@ public class KeywordDAO extends AbstractDAO<Keyword> {
 
     @Override
     protected ResponseUtils getResponseUtils() {
-        // TODO Auto-generated method stub
-        return null;
+        return responseUtils;
     }
 
     @Override

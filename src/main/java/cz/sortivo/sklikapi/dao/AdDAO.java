@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import cz.sortivo.sklikapi.Client;
 import cz.sortivo.sklikapi.EntityType;
-import cz.sortivo.sklikapi.RequestIdMappedResponseUtils;
+import cz.sortivo.sklikapi.IndexMappedResponseUtils;
 import cz.sortivo.sklikapi.ResponseUtils;
 import cz.sortivo.sklikapi.Status;
 import cz.sortivo.sklikapi.bean.Ad;
@@ -55,6 +55,8 @@ public class AdDAO extends AbstractDAO<Ad> {
     private static final String FIELD_STATUS = "status";
     private static final String FIELD_CREATE_DATE = "createDate";
     private static final String FIELD_GROUP_ID = "groupId";
+    private static final String FIELD_GROUP = "group";
+    private static final String FIELD_GROUP_GROUP_ID = "id";
     private static final String FIELD_PREMISE_MODE = "premiseMode";
     private static final String FIELD_PREMISE_ID = "premiseId";
 
@@ -68,8 +70,8 @@ public class AdDAO extends AbstractDAO<Ad> {
             FIELD_ID, FIELD_CLICKTHRU_URL, FIELD_STATUS, FIELD_PREMISE_MODE, FIELD_PREMISE_ID }));
 
     public static final int LIMIT_ADS_TO_GET = 100;
-  
-    private ResponseUtils responseUtils = new RequestIdMappedResponseUtils("adIds");
+
+    private ResponseUtils responseUtils = new IndexMappedResponseUtils("adIds");
 
     public AdDAO(Client client) {
         this.client = client;
@@ -159,7 +161,8 @@ public class AdDAO extends AbstractDAO<Ad> {
      * @throws SKlikException
      */
     @Override
-    public List<Response<Ad>> create(List<Ad> ads) throws InvalidRequestException, EntityCreationException, SKlikException {
+    public List<Response<Ad>> create(List<Ad> ads) throws InvalidRequestException, EntityCreationException,
+            SKlikException {
         return save(ads, CREATE_METHOD_ALLOWED_FIELDS, CREATE_METHOD_NAME, LIMIT_ADS_TO_CREATE);
 
     }
@@ -185,14 +188,11 @@ public class AdDAO extends AbstractDAO<Ad> {
      * @throws SKlikException
      */
     @Override
-    public List<Response<Ad>> update(List<Ad> ads) throws InvalidRequestException, EntityCreationException, SKlikException {
+    public List<Response<Ad>> update(List<Ad> ads) throws InvalidRequestException, EntityCreationException,
+            SKlikException {
         return save(ads, UPDATE_METHOD_ALLOWED_FIELDS, UPDATE_METHOD_NAME, LIMIT_ADS_TO_UPDATE);
 
     }
-
-
-    
-    
 
     /**
      * Performs pause operation on all ads with specified IDs.
@@ -269,6 +269,7 @@ public class AdDAO extends AbstractDAO<Ad> {
         return map;
     }
 
+    @SuppressWarnings("unchecked")
     private Ad transformToObject(Map<String, Object> adResp) throws InvalidRequestException {
         try {
             Ad ad = new Ad();
@@ -290,8 +291,8 @@ public class AdDAO extends AbstractDAO<Ad> {
                 ad.setStatus(Status.getStatus((String) adResp.get(FIELD_STATUS)));
             if (adResp.get(FIELD_CREATE_DATE) != null)
                 ad.setCreateDate(new DateTime(adResp.get(FIELD_CREATE_DATE)));
-            if (adResp.get(FIELD_GROUP_ID) != null)
-                ad.setGroupId((Integer) adResp.get(FIELD_GROUP_ID));
+            if (adResp.get(FIELD_GROUP) != null)
+                ad.setGroupId((Integer) ((Map<String, Object>) adResp.get(FIELD_GROUP)).get(FIELD_GROUP_GROUP_ID));
             if (adResp.get(FIELD_PREMISE_MODE) != null)
                 ad.setPremiseMode((String) adResp.get(FIELD_PREMISE_MODE));
             if (adResp.get(FIELD_PREMISE_ID) != null)
@@ -306,7 +307,8 @@ public class AdDAO extends AbstractDAO<Ad> {
 
     /**
      * 
-     * @Deprecated No longer supported. Use listAds(List<Integer>, EntityType, boolean) instead 
+     * @Deprecated No longer supported. Use listAds(List<Integer>, EntityType,
+     *             boolean) instead
      */
     @Deprecated()
     public List<Ad> listAds(int intValue) throws InvalidRequestException, SKlikException {
@@ -326,7 +328,8 @@ public class AdDAO extends AbstractDAO<Ad> {
 
     @Override
     protected boolean supportsRequestId() {
-        return true;
+        //setting id for ad SKlik API requests is allowed, but not supported in responses every time
+        return false;
     }
 
     @Override
@@ -337,15 +340,13 @@ public class AdDAO extends AbstractDAO<Ad> {
     @Override
     protected EntityCreationException getCreationException(String message, List<Response<Ad>> entityResponses,
             Throwable cause) {
-        
+
         return new AdCreationException("sds", entityResponses, cause);
     }
 
-    public void setSuspend(Integer id)throws InvalidRequestException, SKlikException {
+    public void setSuspend(Integer id) throws InvalidRequestException, SKlikException {
         // TODO Auto-generated method stub
-        
+
     }
-
-
 
 }

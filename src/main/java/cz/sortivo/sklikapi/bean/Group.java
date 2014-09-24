@@ -103,6 +103,12 @@ public class Group implements SKlikObject {
     public void setCpm(Integer cpm) {
         this.cpm = cpm;
     }
+
+    @Override
+    public String toString() {
+        return "Group [id=" + id + ", name=" + name + ", removed=" + removed + ", cpc=" + cpc + ", cpcContext=" + cpcContext + ", status=" + status + ", campaignId=" + campaignId + ", createDate="
+                + createDate + ", maxUserDailyImpression=" + maxUserDailyImpression + ", cpm=" + cpm + "]";
+    }
     
     
     

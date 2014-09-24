@@ -1,10 +1,10 @@
 package cz.sortivo.sklikapi;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import cz.sortivo.sklikapi.bean.Diagnostic;
 import cz.sortivo.sklikapi.bean.Response;
@@ -31,21 +31,29 @@ public abstract class ResponseUtils {
         Map<Integer, List<Diagnostic>> diagnostics = new LinkedHashMap<>();
 
         if (response.containsKey(FIELD_DIAGNOSTICS)) {
-            Map<String, Object> diagnosticsResponse = (Map<String, Object>) response.get(FIELD_DIAGNOSTICS);
-            if (diagnosticsResponse.containsKey(FIELD_PROBLEMS)) {
 
-                Object[] diagnosticMapsObj = (Object[]) diagnosticsResponse.get(FIELD_PROBLEMS);
+            Object[] diagnosticMapsObj = null;
+            if (response.get(FIELD_DIAGNOSTICS) instanceof Object[]) {
+                diagnosticMapsObj = (Object[]) response.get(FIELD_DIAGNOSTICS);
+            } else {
+                Map<String, Object> diagnosticsResponse = (Map<String, Object>) response.get(FIELD_DIAGNOSTICS);
+                if (diagnosticsResponse.containsKey(FIELD_PROBLEMS)) {
+                    diagnosticMapsObj = (Object[]) diagnosticsResponse.get(FIELD_PROBLEMS);
+                }
+            }
+
+            if (diagnosticMapsObj != null) {
                 for (Object obj : diagnosticMapsObj) {
 
                     Map<String, Object> map = (Map<String, Object>) obj;
-
+                    //TODO mapa někdy neobsahuje requestId
                     if (map.containsKey(getRequestIdFieldName())) {
                         // identified request found
                         List<Diagnostic> curDiagnostic;
                         Integer requestId = (Integer) parseRequestId(map.get(getRequestIdFieldName()));
                         String type = (String) map.get(Diagnostic.FIELD_TYPE);
 
-                        if (errorsOnly || Diagnostic.FIELD_TYPE_ERROR.equals(type)) {
+                        if (!errorsOnly || type == null || Diagnostic.FIELD_TYPE_ERROR.equals(type)) {
 
                             if (diagnostics.containsKey(requestId)) {
                                 curDiagnostic = diagnostics.get(requestId);
@@ -67,27 +75,35 @@ public abstract class ResponseUtils {
         return diagnostics;
     }
 
-    
     /**
-     * Builds responses object by connecting response details with corresponding object.
-     * @param entities - input entities, which was passed to API request
-     * @param response - raw response from API
-     * @param errorsOnly - specifies if to map only failed entities with their responses 
-     * @return responses mapped to input entities. They are returned in same order as the input entities came
+     * Builds responses object by connecting response details with corresponding
+     * object.
+     * 
+     * @param entities
+     *            - input entities, which was passed to API request
+     * @param response
+     *            - raw response from API
+     * @param errorsOnly
+     *            - specifies if to map only failed entities with their
+     *            responses
+     * @return responses mapped to input entities. They are returned in same
+     *         order as the input entities came
      */
     @SuppressWarnings("unchecked")
     public <T extends SKlikObject> List<Response<T>> buildResponses(List<T> entities, Map<String, Object> response,
             boolean errorsOnly) {
         Map<Integer, List<Diagnostic>> diagnostics = mapDiagnostics(response, errorsOnly);
-        
-        //it is guaranteed that map keys are in same order as input entities 
+
+        // it is guaranteed that map keys are in same order as input entities
         Map<Integer, T> mappedEntities = mapEntitiesWithRequestId(entities);
 
         List<Response<T>> responses = new LinkedList<>();
 
         List<Integer> ids = null;
         if (response.containsKey(idsStructName)) {
-            ids = (List<Integer>) response.get(idsStructName);
+            Object[] idsArrayResponseObject = (Object[]) response.get(idsStructName);
+            Integer[] idsArray = Arrays.copyOf(idsArrayResponseObject, idsArrayResponseObject.length, Integer[].class);
+            ids = new LinkedList<>(Arrays.asList(idsArray));
         }
 
         int curIndex = 0;

@@ -58,7 +58,7 @@ public class GroupDAO extends AbstractDAO<Group> {
             FIELD_CAMPAIGN_ID, FIELD_NAME, FIELD_CPC, FIELD_CPC_CONTEXT, FIELD_CPM, FIELD_STATUS,
             FIELD_MAX_USER_DAILY_IMPRESSION }));
 
-    private ResponseUtils responseUtils = new IndexMappedResponseUtils("groupIds ");
+    private ResponseUtils responseUtils = new IndexMappedResponseUtils("groupIds");
 
 
     public GroupDAO(Client client) {
@@ -95,10 +95,8 @@ public class GroupDAO extends AbstractDAO<Group> {
                     "Group list exceeds a group count limit for GET operation. Current known limit value is: "
                             + LIMIT_GROUPS_TO_GET);
 
-        Map<String, Object> restrictionFilter = new LinkedHashMap<>();
-        restrictionFilter.put("campaignIds", groupIds);
 
-        Map<String, Object> response = client.sendRequest(GET_GROUPS_METHOD_NAME, new Object[] { restrictionFilter });
+        Map<String, Object> response = client.sendRequest(GET_GROUPS_METHOD_NAME, new Object[] { groupIds.toArray(new Integer[0]) });
 
         List<Group> groups = new ArrayList<>();
         for (Object object : (Object[]) response.get("groups")) {

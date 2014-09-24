@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Response<T> {
     
+    boolean failed = false;
     T entity;
     List<Diagnostic> diagnostics;
     
@@ -12,6 +13,20 @@ public class Response<T> {
         
     }
     
+    
+    
+    public boolean isFailed() {
+        return failed;
+    }
+
+
+
+    public void setFailed(boolean failed) {
+        this.failed = failed;
+    }
+
+
+
     public Response(T entity, List<Diagnostic> diagnostics){
         this.diagnostics = diagnostics;
         this.entity = entity;
