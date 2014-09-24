@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import cz.sortivo.sklikapi.Client;
 import cz.sortivo.sklikapi.EntityType;
-import cz.sortivo.sklikapi.IndexMappedResponseUtils;
+import cz.sortivo.sklikapi.RequestIdMappedResponseUtils;
 import cz.sortivo.sklikapi.ResponseUtils;
 import cz.sortivo.sklikapi.Status;
 import cz.sortivo.sklikapi.bean.Ad;
@@ -71,7 +71,7 @@ public class AdDAO extends AbstractDAO<Ad> {
 
     public static final int LIMIT_ADS_TO_GET = 100;
 
-    private ResponseUtils responseUtils = new IndexMappedResponseUtils("adIds");
+    private ResponseUtils responseUtils = new RequestIdMappedResponseUtils("adIds");
 
     public AdDAO(Client client) {
         this.client = client;
@@ -328,8 +328,8 @@ public class AdDAO extends AbstractDAO<Ad> {
 
     @Override
     protected boolean supportsRequestId() {
-        //setting id for ad SKlik API requests is allowed, but not supported in responses every time
-        return false;
+        //setting id for ad SKlik API requests is allowed, but not supported in responses every time, be careful
+        return true;
     }
 
     @Override
