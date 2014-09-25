@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,13 +39,16 @@ public class Client {
 
     private static final String LOGIN_METHOD_NAME = "client.login";
     private static final String API_LIMITS_METHOD_NAME = "api.limits";
-    private static final String CLIENT_ATTRIBUTES_METHOD_NAME = "client.getAttributes";
+    private static final String CLIENT_ATTRIBUTES_METHOD_NAME = "client.get";
 
     private static final String FIELD_USER_ID = "userId";
     private static final String FIELD_USERNAME = "username";
     private static final String FIELD_ACCESS = "access";
     private static final String FIELD_RELATION_NAME = "relationName";
     private static final String FIELD_RELATION_STATUS = "relationStatus";
+    private static final String FIELD_FOREIGN_ACCOUNTS = "foreignAccounts";
+    private static final String FIELD_USER = "user";
+
     
     //defines how long the thread has to wait when TooManyRequests error occurs
     private static final int SLEEP_ON_TOO_MANY_REQUESTS = 1000; 
@@ -224,21 +228,23 @@ public class Client {
     }
 
 
-    public void getAttributes() throws InvalidRequestException, SKlikException{
-        // TODO Auto-generated method stub
+    @SuppressWarnings("unchecked")
+    public List<ForeignAccount> getForeignActiveAccounts(boolean includeOwnAccount)throws InvalidRequestException, SKlikException {
+        Map<String, Object> response = sendRequest(CLIENT_ATTRIBUTES_METHOD_NAME, new Object[]{});
         
-    }
-
-
-    public void getForeignActiveAccounts() throws InvalidRequestException, SKlikException{
-        // TODO Auto-generated method stub
+        List<ForeignAccount> foreignAccounts = new LinkedList<ForeignAccount>();
         
-    }
-
-
-    public List<ForeignAccount> getForeignActiveAccounts(boolean b)throws InvalidRequestException, SKlikException {
-        // TODO Auto-generated method stub
-        return null;
+        if(includeOwnAccount){
+            Map<String, Object> userMap = (Map<String, Object>) response.get(FIELD_USER);
+            foreignAccounts.add(new ForeignAccount((int) userMap.get(FIELD_USER_ID), null, null, null, "Vlastní: " + (String)userMap.get(FIELD_USERNAME)));
+        }
+        
+        Object[] foreignAccountsResponse = (Object[]) response.get(FIELD_FOREIGN_ACCOUNTS);
+        for (Object foreignAccountMap : foreignAccountsResponse) {
+            foreignAccounts.add(transformToObject((Map<String, Object>)foreignAccountMap));
+        }
+        
+        return foreignAccounts;
     }
 
 }

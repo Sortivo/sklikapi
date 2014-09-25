@@ -252,11 +252,6 @@ public class Ad  implements SKlikObject{
         return true;
     }
 
-    public boolean isRemoved() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
     @Override
     public String getName() {
         return creative1;
