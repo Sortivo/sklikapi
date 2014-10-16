@@ -6,7 +6,7 @@ package cz.sortivo.sklikapi.dao;
 
 import cz.sortivo.sklikapi.Client;
 import cz.sortivo.sklikapi.SKlikObject;
-import cz.sortivo.sklikapi.Stats;
+import cz.sortivo.sklikapi.bean.Stats;
 import cz.sortivo.sklikapi.bean.Ad;
 import cz.sortivo.sklikapi.bean.Campaign;
 import cz.sortivo.sklikapi.bean.Group;

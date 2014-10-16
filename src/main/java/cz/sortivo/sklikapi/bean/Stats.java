@@ -1,4 +1,4 @@
-package cz.sortivo.sklikapi;
+package cz.sortivo.sklikapi.bean;
 /**
  * 
  * @author michal
