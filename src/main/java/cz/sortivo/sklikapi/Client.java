@@ -230,8 +230,10 @@ public class Client {
 
     @SuppressWarnings("unchecked")
     public List<ForeignAccount> getForeignActiveAccounts(boolean includeOwnAccount)throws InvalidRequestException, SKlikException {
+        Integer oldUserId = userId;
+        userId = null;
         Map<String, Object> response = sendRequest(CLIENT_ATTRIBUTES_METHOD_NAME, new Object[]{});
-        
+        userId = oldUserId;
         List<ForeignAccount> foreignAccounts = new LinkedList<ForeignAccount>();
         
         if(includeOwnAccount){

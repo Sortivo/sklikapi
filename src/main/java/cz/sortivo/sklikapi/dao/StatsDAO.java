@@ -13,10 +13,12 @@ import cz.sortivo.sklikapi.bean.Group;
 import cz.sortivo.sklikapi.bean.Keyword;
 import cz.sortivo.sklikapi.exception.InvalidRequestException;
 import cz.sortivo.sklikapi.exception.SKlikException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.joda.time.DateTime;
 
 public class StatsDAO {
@@ -51,10 +53,10 @@ public class StatsDAO {
      * response: keyword.stats
      */
     private <T extends SKlikObject> String getMethodNameByClazz( Class<T> classType ){
-        if (classType.isInstance(Campaign.class)){return GET_CAMPAIGN_STATS_METHOD_NAME;}
-        if (classType.isInstance(Group.class)){return GET_GROUP_STATS_METHOD_NAME;}
-        if (classType.isInstance(Keyword.class)){return GET_KEYWORD_STATS_METHOD_NAME;}
-        if (classType.isInstance(Ad.class)){return GET_AD_STATS_METHOD_NAME;}
+        if (classType.isInstance(new Campaign())){return GET_CAMPAIGN_STATS_METHOD_NAME;}
+        if (classType.isInstance(new Group())){return GET_GROUP_STATS_METHOD_NAME;}
+        if (classType.isInstance(new Keyword())){return GET_KEYWORD_STATS_METHOD_NAME;}
+        if (classType.isInstance(new Ad())){return GET_AD_STATS_METHOD_NAME;}
         
         throw new IllegalArgumentException("This type is not suitable for available methods");
     }
@@ -65,13 +67,26 @@ public class StatsDAO {
      * @return Stats object filled with data from response
      */
     @SuppressWarnings("unchecked")
-    private Map<Integer, Stats> mapStatsObject(Map<String, Object> response){
+    private Map<Integer, Stats> mapStatsObject(Map<String, Object> response, String methodName){
         Map<Integer, Stats> ret = new HashMap<>();
         
         for (Object object : (Object[]) response.get("report")) {           
             Map<String, Object> responseInfo = (Map<String, Object>) object;
-            Integer keywordId = (int) responseInfo.get("keywordId");
-            Map<String, Object> responseData = (Map<String, Object>) responseInfo.get("stats");
+            Integer id = null;
+            switch (methodName){
+            case GET_KEYWORD_STATS_METHOD_NAME: 
+                id = (int) responseInfo.get("keywordId");
+                break;
+            case GET_GROUP_STATS_METHOD_NAME:
+                id = (int) responseInfo.get("groupId");
+                break;
+            default:
+                throw new RuntimeException("Unknown method name " + methodName);
+            }
+            
+            Object[] statsObjects = (Object[]) responseInfo.get("stats");
+            // we want only the first, because there should be only one ( we set granularity to total)            
+            Map<String, Object> responseData = (Map<String, Object>) statsObjects[0];
             Stats stats = new Stats();
             stats.setAvgPosition((double)responseData.get(FIELD_AVG_POSITION));
             stats.setClicks((int)responseData.get(FIELD_CLICKS));
@@ -80,7 +95,7 @@ public class StatsDAO {
             stats.setMoney((int)responseData.get(FIELD_PRICE));
             stats.setTransactions((int)responseData.get(FIELD_TRANSACTIONS));
             stats.setValue((int)responseData.get(FIELD_VALUE));
-            ret.put(keywordId, stats);
+            ret.put(id, stats);
         }
         
         
@@ -95,17 +110,18 @@ public class StatsDAO {
      * @return stat object with filled response values
      */
     public <T extends SKlikObject> Map<Integer, Stats> getStats(Class<T> classType, List<Integer> ids, DateTime from, DateTime to)throws SKlikException, InvalidRequestException{
-        return mapStatsObject(getResponse(classType, ids, from, to));
+        String methodName = getMethodNameByClazz(classType);
+        return mapStatsObject(getResponse(methodName, ids, from, to), methodName);
     }
    
   
     
-    private <T extends SKlikObject> Map<String, Object> getResponse(Class<T> classType, List<Integer> ids, DateTime from, DateTime to)throws SKlikException, InvalidRequestException{
+    private <T extends SKlikObject> Map<String, Object> getResponse(String methodName, List<Integer> ids, DateTime from, DateTime to)throws SKlikException, InvalidRequestException{
        Map<String, Object> paramsStruct = new HashMap<>();
        paramsStruct.put("dateFrom", from.toDate());
        paramsStruct.put("dateTo", to.toDate());
        paramsStruct.put("granularity", "total");
-       return client.sendRequest(getMethodNameByClazz(classType), new Object[]{ids, paramsStruct});
+       return client.sendRequest(methodName, new Object[]{ids, paramsStruct});
     }
     
 
