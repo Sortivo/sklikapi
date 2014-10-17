@@ -20,40 +20,40 @@ public class Stats {
     public void setAvgPosition(double avgPosition) {
         this.avgPosition = avgPosition;
     }
-    public int getClicks() {
+    public Integer getClicks() {
         return clicks;
     }
-    public void setClicks(int clicks) {
+    public void setClicks(Integer clicks) {
         this.clicks = clicks;
     }
-    public int getImpressions() {
+    public Integer getImpressions() {
         return impressions;
     }
-    public void setImpressions(int impressions) {
+    public void setImpressions(Integer impressions) {
         this.impressions = impressions;
     }
-    public int getConversions() {
+    public Integer getConversions() {
         return conversions;
     }
-    public void setConversions(int conversions) {
+    public void setConversions(Integer conversions) {
         this.conversions = conversions;
     }
-    public int getTransactions() {
+    public Integer getTransactions() {
         return transactions;
     }
-    public void setTransactions(int transactions) {
+    public void setTransactions(Integer transactions) {
         this.transactions = transactions;
     }
-    public int getValue() {
+    public Integer getValue() {
         return value;
     }
-    public void setValue(int value) {
+    public void setValue(Integer value) {
         this.value = value;
     }
-    public int getMoney() {
+    public Integer getMoney() {
         return money;
     }
-    public void setMoney(int money) {
+    public void setMoney(Integer money) {
         this.money = money;
     }
     

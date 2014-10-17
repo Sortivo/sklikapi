@@ -88,13 +88,13 @@ public class StatsDAO {
             // we want only the first, because there should be only one ( we set granularity to total)            
             Map<String, Object> responseData = (Map<String, Object>) statsObjects[0];
             Stats stats = new Stats();
-            stats.setAvgPosition((double)responseData.get(FIELD_AVG_POSITION));
-            stats.setClicks((int)responseData.get(FIELD_CLICKS));
-            stats.setConversions((int)responseData.get(FIELD_CONVERSIONS));
-            stats.setImpressions((int)responseData.get(FIELD_IMPRESSIONS));
-            stats.setMoney((int)responseData.get(FIELD_PRICE));
-            stats.setTransactions((int)responseData.get(FIELD_TRANSACTIONS));
-            stats.setValue((int)responseData.get(FIELD_VALUE));
+            stats.setAvgPosition((Double)responseData.get(FIELD_AVG_POSITION));
+            stats.setClicks((Integer)responseData.get(FIELD_CLICKS));
+            stats.setConversions((Integer)responseData.get(FIELD_CONVERSIONS));
+            stats.setImpressions((Integer)responseData.get(FIELD_IMPRESSIONS));
+            stats.setMoney((Integer)responseData.get(FIELD_PRICE));
+            stats.setTransactions((Integer)responseData.get(FIELD_TRANSACTIONS));
+            stats.setValue((Integer)responseData.get(FIELD_VALUE));
             ret.put(id, stats);
         }
         
