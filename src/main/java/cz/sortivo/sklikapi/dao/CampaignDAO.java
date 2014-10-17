@@ -110,7 +110,7 @@ public class CampaignDAO extends AbstractDAO<Campaign> {
         return campaigns;
     }
     
-    public List<Campaign> listActiveCampaigns(int userId) throws InvalidRequestException, SKlikException {
+    public List<Campaign> listActiveCampaigns(Integer userId) throws InvalidRequestException, SKlikException {
         Map<String, Object> restrictionFilter = new LinkedHashMap<>();
         restrictionFilter.put("includeDeleted", false);
         Integer oldUserId = client.getUserId();
@@ -215,11 +215,6 @@ public class CampaignDAO extends AbstractDAO<Campaign> {
 
     }
 
-    @Deprecated
-    public List<Campaign> listActiveCampaigns(Integer sklikUserId) throws InvalidRequestException, SKlikException {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
     @Deprecated
     public void pauseCampaign(Integer campaignId) throws InvalidRequestException, SKlikException {
