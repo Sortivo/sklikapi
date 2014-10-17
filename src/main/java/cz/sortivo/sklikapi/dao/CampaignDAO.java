@@ -15,6 +15,7 @@ import org.joda.time.DateTime;
 import cz.sortivo.sklikapi.Client;
 import cz.sortivo.sklikapi.IndexMappedResponseUtils;
 import cz.sortivo.sklikapi.ResponseUtils;
+import cz.sortivo.sklikapi.Status;
 import cz.sortivo.sklikapi.bean.Campaign;
 import cz.sortivo.sklikapi.bean.Group;
 import cz.sortivo.sklikapi.bean.Response;
@@ -93,14 +94,42 @@ public class CampaignDAO extends AbstractDAO<Campaign> {
 
         return campaigns;
     }
+    
+    public List<Campaign> listCampaigns(int userId, boolean includeDeleted) throws InvalidRequestException, SKlikException {
+        Map<String, Object> restrictionFilter = new LinkedHashMap<>();
+        restrictionFilter.put("includeDeleted", includeDeleted);
+        Integer oldUserId = client.getUserId();
+        client.setUserId(userId);
+        Map<String, Object> response = client.sendRequest(LIST_CAMPAIGNS_METHOD_NAME, new Object[] { restrictionFilter });
+        client.setUserId(oldUserId);
+        List<Campaign> campaigns = new ArrayList<>();
+        for (Object object : (Object[]) response.get("campaigns")) {
+            campaigns.add(transformToObject((Map<String, Object>) object));
+        }
 
-    public List<Campaign> listCampaigns(int userId) throws InvalidRequestException, SKlikException {
-        return null;
-        // TODO
+        return campaigns;
+    }
+    
+    public List<Campaign> listActiveCampaigns(int userId) throws InvalidRequestException, SKlikException {
+        Map<String, Object> restrictionFilter = new LinkedHashMap<>();
+        restrictionFilter.put("includeDeleted", false);
+        Integer oldUserId = client.getUserId();
+        client.setUserId(userId);
+        Map<String, Object> response = client.sendRequest(LIST_CAMPAIGNS_METHOD_NAME, new Object[] { restrictionFilter });
+        client.setUserId(oldUserId);
+        List<Campaign> campaigns = new ArrayList<>();
+        for (Object object : (Object[]) response.get("campaigns")) {
+            Campaign transformToObject = transformToObject((Map<String, Object>) object);
+            if (transformToObject.getStatus().equals(Status.ACTIVE.getStatusText())){
+                campaigns.add(transformToObject);
+            }            
+        }
+
+        return campaigns;
     }
 
     public Integer create(Campaign c) throws InvalidRequestException, SKlikException, EntityCreationException {
-        List<Response<Campaign>> campaignResponse = create(new LinkedList<Campaign>(Arrays.asList(new Campaign[]{c})));
+        List<Response<Campaign>> campaignResponse = create(new LinkedList<>(Arrays.asList(new Campaign[]{c})));
         
         return campaignResponse.get(0).getEntity().getId();
     }
@@ -186,11 +215,13 @@ public class CampaignDAO extends AbstractDAO<Campaign> {
 
     }
 
+    @Deprecated
     public List<Campaign> listActiveCampaigns(Integer sklikUserId) throws InvalidRequestException, SKlikException {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Deprecated
     public void pauseCampaign(Integer campaignId) throws InvalidRequestException, SKlikException {
         // TODO Auto-generated method stub
 
